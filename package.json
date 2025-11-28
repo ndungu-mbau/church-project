@@ -1,0 +1,36 @@
+{
+  "name": "church-project",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "check": "biome check --write .",
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:native": "turbo -F native dev",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @church-project/db db:push",
+    "db:studio": "turbo -F @church-project/db db:studio",
+    "db:generate": "turbo -F @church-project/db db:generate",
+    "db:migrate": "turbo -F @church-project/db db:migrate",
+    "db:start": "turbo -F @church-project/db db:start",
+    "db:watch": "turbo -F @church-project/db db:watch",
+    "db:stop": "turbo -F @church-project/db db:stop",
+    "db:down": "turbo -F @church-project/db db:down"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.2",
+    "zod": "^4.1.11"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4",
+    "@biomejs/biome": "^2.2.0",
+    "@types/node": "^22.13.11"
+  },
+  "packageManager": "pnpm@10.22.0"
+}

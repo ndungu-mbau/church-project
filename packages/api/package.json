@@ -1,0 +1,30 @@
+{
+  "name": "@church-project/api",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "type": "module",
+  "scripts": {},
+  "devDependencies": {
+    "@types/express": "catalog:",
+    "@church-project/config": "workspace:*"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@trpc/server": "catalog:",
+    "@trpc/client": "catalog:",
+    "better-auth": "catalog:",
+    "drizzle-orm": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "^4.1.11",
+    "@church-project/auth": "workspace:*",
+    "@church-project/db": "workspace:*"
+  }
+}

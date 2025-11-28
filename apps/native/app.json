@@ -1,0 +1,17 @@
+{
+	"expo": {
+		"scheme": "church-project",
+		"userInterfaceStyle": "automatic",
+		"orientation": "default",
+		"web": {
+			"bundler": "metro"
+		},
+		"name": "church-project",
+		"slug": "church-project",
+		"plugins": ["expo-font"],
+		"experiments": {
+			"typedRoutes": true,
+			"reactCompiler": true
+		}
+	}
+}
