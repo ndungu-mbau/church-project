@@ -1,17 +1,14 @@
 {
-  "name": "web",
+  "name": "@church-project/landing",
   "version": "0.0.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --port=3001",
+    "dev": "vite --port=3002",
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
-    "check-types": "tsc --noEmit",
-    "tauri": "tauri",
-    "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build"
+    "check-types": "tsc --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -33,9 +30,7 @@
     "@trpc/client": "catalog:",
     "@trpc/server": "catalog:",
     "@tanstack/react-query": "catalog:",
-    "better-auth": "catalog:",
-    "@church-project/api": "workspace:*",
-    "@church-project/auth": "workspace:*"
+    "@church-project/api": "workspace:*"
   },
   "devDependencies": {
     "@tanstack/react-router-devtools": "^1.114.27",
@@ -49,7 +44,6 @@
     "tailwindcss": "^4.0.15",
     "vite": "^6.2.2",
     "@tanstack/react-query-devtools": "^5.85.5",
-    "@tauri-apps/cli": "^2.4.0",
     "@church-project/config": "workspace:*"
   }
 }

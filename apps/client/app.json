@@ -1,13 +1,13 @@
 {
 	"expo": {
-		"scheme": "church-project",
+		"scheme": "church-project-client",
 		"userInterfaceStyle": "automatic",
 		"orientation": "default",
 		"web": {
 			"bundler": "metro"
 		},
-		"name": "church-project",
-		"slug": "church-project",
+		"name": "Church Client",
+		"slug": "church-project-client",
 		"plugins": ["expo-font"],
 		"experiments": {
 			"typedRoutes": true,

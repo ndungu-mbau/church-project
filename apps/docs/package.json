@@ -1,5 +1,5 @@
 {
-  "name": "fumadocs",
+  "name": "@church-project/docs",
   "private": true,
   "sideEffects": false,
   "type": "module",
