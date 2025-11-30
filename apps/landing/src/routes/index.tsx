@@ -2,8 +2,7 @@ import { BenefitItem, FeatureCard, PricingCard } from "@/components/cards";
 import { Button } from "@/components/ui/button";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BarChart3, BookOpen, Calendar, DollarSign, Users } from "lucide-react";
-// import { trpc } from "@/utils/trpc";
-// import { useMutation } from "@tanstack/react-query";
+import { InviteForm } from "@/components/invite-form";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,
@@ -220,9 +219,7 @@ function HomeComponent() {
           <p className="text-xl opacity-90 mb-8 text-pretty">
             Join hundreds of churches already using Church Manager to serve their communities better.
           </p>
-          <Button size="lg" className="bg-primary-foreground text-primary hover:bg-primary-foreground/90">
-            Get started free today
-          </Button>
+          <InviteForm />
         </div>
       </section>
     
