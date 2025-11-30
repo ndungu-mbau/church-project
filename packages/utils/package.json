@@ -1,0 +1,25 @@
+{
+  "name": "@church-project/utils",
+  "version": "0.0.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./redis": {
+      "default": "./src/redis.ts"
+    }
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.34.3",
+    "axios": "^1.13.2",
+    "google-libphonenumber": "^3.2.38"
+  },
+  "devDependencies": {
+    "@church-project/config": "workspace:*",
+    "@types/google-libphonenumber": "^7.4.30"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
