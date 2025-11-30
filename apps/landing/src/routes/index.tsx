@@ -3,12 +3,39 @@ import { Button } from "@/components/ui/button";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { BarChart3, BookOpen, Calendar, DollarSign, Users } from "lucide-react";
 import { InviteForm } from "@/components/invite-form";
+import { trpc } from "@/utils/trpc";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,
-});
+  loader: async ({ context }) => {
+    console.log("[LOADER]: healthCheck loader called")
+    await context.queryClient.prefetchQuery(context.trpc.healthCheck.queryOptions())
+  },
+})
 
 function HomeComponent() {
+  const { data, isFetching } = useQuery(trpc.healthCheck.queryOptions());
+
+  if(isFetching) {
+    toast.loading("Loading health check", {
+      description: "Please wait...",
+      duration: 1000
+    })
+  }
+
+  if(data) {
+    toast.success("`Loaded health check", {
+      description: "Server is up and online",
+      duration: 5000
+    })
+  } else {
+    toast.error("Failed to load health check", {
+      description: "Server might be down. Please try again later",
+      duration: 5000
+    })
+  }
 
 	return (
 		<div className="min-h-screen bg-background">
