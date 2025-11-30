@@ -47,6 +47,7 @@
     "@tanstack/react-query": "catalog:",
     "better-auth": "catalog:",
     "@better-auth/expo": "catalog:",
+    "@church-project/auth": "workspace:*",
     "@church-project/api": "workspace:*"
   },
   "devDependencies": {
