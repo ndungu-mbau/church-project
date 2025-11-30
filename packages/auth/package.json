@@ -17,10 +17,12 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "better-auth": "catalog:",
     "@better-auth/expo": "catalog:",
+    "@church-project/db": "workspace:*",
+    "@church-project/utils": "workspace:*",
+    "better-auth": "catalog:",
     "dotenv": "catalog:",
-    "zod": "^4.1.11",
-    "@church-project/db": "workspace:*"
+    "drizzle-orm": "catalog:",
+    "zod": "^4.1.11"
   }
 }
