@@ -11,7 +11,7 @@ import { user } from './auth'
 
 export const profiles = pgTable('profiles', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
-  userId: uuid('user_id').notNull().unique().references(() => user.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').unique().references(() => user.id, { onDelete: 'set null' }),
   phone: text("phone").unique(),
   phoneVerified: boolean("phone_verified").default(false).notNull(),
   bio: text('bio'),

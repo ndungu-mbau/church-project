@@ -8,6 +8,7 @@ import {
 import { relations } from 'drizzle-orm/relations'
 import { user } from './auth'
 import { church } from './churches'
+import { profiles } from './profiles'
 
 export const staff = pgTable('staff', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
@@ -19,6 +20,7 @@ export const staff = pgTable('staff', {
   endDate: timestamp('end_date', { withTimezone: true }),
   isActive: boolean('is_active').default(true),
   churchId: uuid('church_id').references(() => church.id),
+  profileId: uuid('profile_id').references(() => profiles.id),
 })
 
 export const staffRelations = relations(staff, ({ one }) => ({
@@ -26,5 +28,9 @@ export const staffRelations = relations(staff, ({ one }) => ({
   church: one(church, {
     fields: [staff.churchId],
     references: [church.id],
+  }),
+  profile: one(profiles, {
+    fields: [staff.profileId],
+    references: [profiles.id],
   }),
 }))
