@@ -9,6 +9,10 @@ import {
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm/relations'
 import { user } from './auth'
+import { churchSubscription } from './subscriptions'
+import { profiles } from './profiles'
+import { members } from './members'
+import { staff } from './staff'
 
 // Core church model - required fields for initial registration
 export const church = pgTable('church', {
@@ -66,7 +70,7 @@ export const churchInfo = pgTable('church_info', {
     .notNull(),
 })
 
-export const churchRelations = relations(church, ({ one }) => ({
+export const churchRelations = relations(church, ({ one, many }) => ({
   pastor: one(user, {
     fields: [church.pastorId],
     references: [user.id],
@@ -75,6 +79,13 @@ export const churchRelations = relations(church, ({ one }) => ({
     fields: [church.id],
     references: [churchInfo.churchId],
   }),
+  subscription: one(churchSubscription, {
+    fields: [church.id],
+    references: [churchSubscription.churchId],
+  }),
+  profiles: many(profiles),
+  members: many(members),
+  staff: many(staff),
 }))
 
 export const churchInfoRelations = relations(churchInfo, ({ one }) => ({

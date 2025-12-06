@@ -8,10 +8,11 @@ import {
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm/relations'
 import { user } from './auth'
+import { church } from './churches'
 
 export const profiles = pgTable('profiles', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
-  userId: uuid('user_id').notNull().unique().references(() => user.id, { onDelete: 'cascade' }),
+  userId: uuid('user_id').unique().references(() => user.id, { onDelete: 'set null' }),
   phone: text("phone").unique(),
   phoneVerified: boolean("phone_verified").default(false).notNull(),
   bio: text('bio'),
@@ -26,11 +27,16 @@ export const profiles = pgTable('profiles', {
     .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
+  churchId: uuid('church_id').references(() => church.id),
 })
 
 export const profilesRelations = relations(profiles, ({ one }) => ({
   user: one(user, {
     fields: [profiles.userId],
     references: [user.id],
+  }),
+  church: one(church, {
+    fields: [profiles.churchId],
+    references: [church.id],
   }),
 }))

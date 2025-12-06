@@ -12,7 +12,7 @@
     "build": "turbo build",
     "check-types": "turbo check-types",
     "dev:native": "turbo -F @church-project/client dev",
-    "dev:web": "turbo -F @church-project/admin dev",
+    "dev:admin": "turbo -F @church-project/admin dev",
     "dev:server": "turbo -F @church-project/server dev",
     "dev:landing": "turbo -F @church-project/landing dev",
     "dev:docs": "turbo -F @church-project/docs dev",

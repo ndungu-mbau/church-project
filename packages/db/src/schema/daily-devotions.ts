@@ -2,31 +2,29 @@ import {
   pgTable,
   uuid,
   text,
+  timestamp,
 } from 'drizzle-orm/pg-core'
 import { relations } from 'drizzle-orm/relations'
-import { user } from './auth'
 import { church } from './churches'
+import { user } from './auth'
 
-export const groups = pgTable('groups', {
+export const dailyDevotions = pgTable('daily_devotions', {
   id: uuid('id').primaryKey().notNull().defaultRandom(),
-  name: text('name'),
-  leaderId: uuid('leader_id').references(() => user.id),
-  description: text('description'),
+  title: text('title'),
+  content: text('content'),
+  date: timestamp('date', { withTimezone: true }),
+  link: text('link'),
   churchId: uuid('church_id').references(() => church.id),
   createdBy: uuid('created_by').references(() => user.id),
 })
 
-export const groupsRelations = relations(groups, ({ one }) => ({
-  leader: one(user, {
-    fields: [groups.leaderId],
-    references: [user.id],
-  }),
+export const dailyDevotionsRelations = relations(dailyDevotions, ({ one }) => ({
   church: one(church, {
-    fields: [groups.churchId],
+    fields: [dailyDevotions.churchId],
     references: [church.id],
   }),
   createdBy: one(user, {
-    fields: [groups.createdBy],
+    fields: [dailyDevotions.createdBy],
     references: [user.id],
   }),
 }))
