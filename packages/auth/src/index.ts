@@ -3,7 +3,7 @@ import { betterAuth, type BetterAuthOptions } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { db } from "@church-project/db";
 import * as schema from "@church-project/db/schema/auth";
-import { otpPluginServer } from "./plugins/otp-plugin";
+// import { otpPluginServer } from "./plugins/otp-plugin";
 import crypto from "node:crypto"
 
 import { profileLinkerPlugin } from "./plugins/profile-linker";
@@ -41,6 +41,6 @@ export const auth = betterAuth<BetterAuthOptions>({
 			generateId: () => crypto.randomUUID(),
 		}
 	},
-  plugins: [expo(), otpPluginServer(), profileLinkerPlugin()]
+  plugins: [profileLinkerPlugin(), expo() ]
 });
 
