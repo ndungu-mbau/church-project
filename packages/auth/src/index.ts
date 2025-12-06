@@ -6,7 +6,10 @@ import * as schema from "@church-project/db/schema/auth";
 import { otpPluginServer } from "./plugins/otp-plugin";
 import crypto from "node:crypto"
 
+import { profileLinkerPlugin } from "./plugins/profile-linker";
+
 export * from "./plugins/otp-plugin";
+export * from "./plugins/profile-linker";
 
 export const auth = betterAuth<BetterAuthOptions>({
 	database: drizzleAdapter(db, {
@@ -38,6 +41,6 @@ export const auth = betterAuth<BetterAuthOptions>({
 			generateId: () => crypto.randomUUID(),
 		}
 	},
-  plugins: [expo(), otpPluginServer()]
+  plugins: [expo(), otpPluginServer(), profileLinkerPlugin()]
 });
 
