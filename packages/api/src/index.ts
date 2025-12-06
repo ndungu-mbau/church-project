@@ -18,6 +18,9 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
 	}
 	const existingUser = await db.query.user.findFirst({
 		where: (user, { eq }) => eq(user.id, ctx?.session?.user?.id ?? ""),
+		with: {
+			profiles: true,
+		},
 	});
 	
 	if(!existingUser){
@@ -26,7 +29,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
 			message: "Authentication required",
 			cause: "No session",
 		});
-	}
+	};
 	
 	return next({
 		ctx: {
@@ -34,6 +37,7 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
 			session: {
 				...ctx.session,
 				user: existingUser,
+				churchId: existingUser.profiles.churchId,
 			},
 		},
 	});
