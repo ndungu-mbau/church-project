@@ -59,7 +59,39 @@ export const superuserProcedure = protectedProcedure.use(async ({ ctx, next }) =
 	});
 });
 
-export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+export const churchProtectedProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+	if (!ctx.session.churchId) {
+		throw new TRPCError({
+			code: "UNAUTHORIZED",
+			message: "Church ID required",
+			cause: "No church ID",
+		});
+	}
+
+	const subscription = await db.query.churchSubscription.findFirst({
+		where: (sub, { eq }) => eq(sub.churchId, ctx.session.churchId!),
+	});
+
+	if (
+		!subscription ||
+		(subscription.status !== "active" && subscription.status !== "trialing")
+	) {
+		throw new TRPCError({
+			code: "FORBIDDEN",
+			message: "Active subscription required",
+			cause: "Subscription inactive or missing",
+		});
+	}
+
+	return next({
+		ctx: {
+			...ctx,
+			session: ctx.session,
+		},
+	});
+});
+
+export const adminProcedure = churchProtectedProcedure.use(async ({ ctx, next }) => {
 	if (ctx.session.user.role !== "admin") {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
@@ -75,7 +107,7 @@ export const adminProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 	});
 });
 
-export const staffProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+export const staffProcedure = churchProtectedProcedure.use(async ({ ctx, next }) => {
 	if (ctx.session.user.role !== "staff") {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
@@ -91,7 +123,7 @@ export const staffProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 	});
 });
 
-export const pastorProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+export const pastorProcedure = churchProtectedProcedure.use(async ({ ctx, next }) => {
 	if (ctx.session.user.role !== "pastor") {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
@@ -107,7 +139,7 @@ export const pastorProcedure = protectedProcedure.use(async ({ ctx, next }) => {
 	});
 });
 
-export const memberProcedure = protectedProcedure.use(async ({ ctx, next }) => {
+export const memberProcedure = churchProtectedProcedure.use(async ({ ctx, next }) => {
 	if (ctx.session.user.role !== "member") {
 		throw new TRPCError({
 			code: "UNAUTHORIZED",
