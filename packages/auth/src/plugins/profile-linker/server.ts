@@ -2,6 +2,7 @@ import type { BetterAuthPlugin } from "better-auth";
 import { createAuthMiddleware } from "better-auth/plugins"
 import { db } from "@church-project/db";
 import { members } from "@church-project/db/schema/members";
+import { staff } from "@church-project/db/schema/staff";
 import { profiles } from "@church-project/db/schema/profiles";
 import { eq } from "drizzle-orm";
 
@@ -56,22 +57,41 @@ async function linkProfileByEmail(userId: string, email: string) {
     where: eq(members.email, email),
   });
 
-  if (!member) return;
-
-  // 2. Link Member to User
-  // If the member already has a user ID, we might be overwriting it, or it might be null.
-  // Assuming strict claiming, we update it.
-  await db.update(members)
+  if (member) {
+    // Link Member to User
+    // If the member already has a user ID, we might be overwriting it, or it might be null.
+    // Assuming strict claiming, we update it.
+    await db.update(members)
       .set({ userId: userId })
       .where(eq(members.id, member.id));
 
-  // 3. Link Profile to User (if exists)
-  if (member.profileId) {
-    // We only update if the profile doesn't have a user ID yet,
-    // OR if we assume this is the definitive claiming action.
-    // Given the task, we want to assign the user.
-    await db.update(profiles)
+    // Link Profile to User (if exists)
+    if (member.profileId) {
+      // We only update if the profile doesn't have a user ID yet,
+      // OR if we assume this is the definitive claiming action.
+      // Given the task, we want to assign the user.
+      await db.update(profiles)
         .set({ userId: userId })
         .where(eq(profiles.id, member.profileId));
+    }
+  }
+
+  // 2. Find staff by email
+  const staffMember = await db.query.staff.findFirst({
+    where: eq(staff.email, email),
+  });
+
+  if (staffMember) {
+    // Link Staff to User
+    await db.update(staff)
+      .set({ userId: userId })
+      .where(eq(staff.id, staffMember.id));
+
+    // Link Profile to User (if exists)
+    if (staffMember.profileId) {
+      await db.update(profiles)
+        .set({ userId: userId })
+        .where(eq(profiles.id, staffMember.profileId));
+    }
   }
 }
