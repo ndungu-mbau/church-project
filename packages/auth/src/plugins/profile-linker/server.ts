@@ -1,4 +1,5 @@
 import type { BetterAuthPlugin } from "better-auth";
+import { createAuthMiddleware } from "better-auth/plugins"
 import { db } from "@church-project/db";
 import { members } from "@church-project/db/schema/members";
 import { profiles } from "@church-project/db/schema/profiles";
@@ -13,14 +14,13 @@ export const profileLinkerPlugin = () => {
           matcher: (ctx) => {
             return ctx.path.includes("/sign-up") || ctx.path.includes("/callback");
           },
-          handler: async (ctx: any) => {
+          handler: createAuthMiddleware(async (ctx) => {
             let user = ctx.context?.newSession?.user;
 
             // Fallback: Try to parse from response if not in context
-            if (!user && ctx.response) {
+            if (!user && ctx.body) {
                try {
-                   const clone = ctx.response.clone();
-                   const body = await clone.json();
+                   const body = ctx.body;
                    if (body?.user) {
                        user = body.user;
                    } else if (body?.data?.user) { // handling potential wrapper
@@ -42,7 +42,7 @@ export const profileLinkerPlugin = () => {
             }
             
             return;
-          },
+          }),
         },
       ],
     },
@@ -50,6 +50,7 @@ export const profileLinkerPlugin = () => {
 };
 
 async function linkProfileByEmail(userId: string, email: string) {
+  console.log({ userId, email });
   // 1. Find member by email
   const member = await db.query.members.findFirst({
     where: eq(members.email, email),
