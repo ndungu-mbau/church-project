@@ -1,18 +1,19 @@
-import { protectedProcedure, publicProcedure, router } from "../index";
-import { todoRouter } from "./todo";
+
+import { router } from "../trpc";
+import { memberRouter } from "./member";
+import { staffRouter } from "./staff";
+import { pastorRouter } from "./pastor";
+import { adminRouter } from "./admin";
+import { superuserRouter } from "./superuser";
 import { invitesRouter } from "./invites";
 
 export const appRouter = router({
-	healthCheck: publicProcedure.query(() => {
-		return "OK";
-	}),
-	privateData: protectedProcedure.query(({ ctx }) => {
-		return {
-			message: "This is private",
-			user: ctx.session.user,
-		};
-	}),
-	todo: todoRouter,
-	invites: invitesRouter,
+  member: memberRouter,
+  staff: staffRouter,
+  pastor: pastorRouter,
+  admin: adminRouter,
+  superuser: superuserRouter,
+  invites: invitesRouter,
 });
+
 export type AppRouter = typeof appRouter;

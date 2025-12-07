@@ -1,5 +1,5 @@
 import z from "zod";
-import { router, publicProcedure, superuserProcedure } from "../index";
+import { router, publicProcedure, superuserProcedure } from "../trpc";
 import { invites } from "@church-project/db/schema/invites";
 import { eq } from "drizzle-orm";
 import { db } from "@church-project/db";
