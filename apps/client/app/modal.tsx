@@ -2,7 +2,8 @@ import { Container } from "@/components/container";
 import { Text, View, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { Card, useThemeColor } from "heroui-native";
+import { Card, CardContent, CardFooter, CardTitle, CardDescription } from "@/components/ui/card";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 function Modal() {
 	const accentForegroundColor = useThemeColor("accent-foreground");
@@ -14,8 +15,8 @@ function Modal() {
 	return (
 		<Container>
 			<View className="flex-1 justify-center items-center p-6">
-				<Card variant="secondary" className="p-6 w-full max-w-sm">
-					<Card.Body className="gap-4 items-center">
+				<Card variant="surface-1" className="p-6 w-full max-w-sm">
+					<CardContent className="gap-4 items-center p-0">
 						<View className="w-16 h-16 bg-accent rounded-full items-center justify-center mb-2">
 							<Ionicons
 								name="checkmark"
@@ -23,15 +24,15 @@ function Modal() {
 								color={accentForegroundColor}
 							/>
 						</View>
-						<Card.Title className="text-center text-xl">
+						<CardTitle className="text-center text-xl">
 							Modal Screen
-						</Card.Title>
-						<Card.Description className="text-center">
+						</CardTitle>
+						<CardDescription className="text-center">
 							This is an example modal screen. You can use this pattern for
 							dialogs, confirmations, or any overlay content.
-						</Card.Description>
-					</Card.Body>
-					<Card.Footer className="mt-4">
+						</CardDescription>
+					</CardContent>
+					<CardFooter className="mt-4 p-0">
 						<Pressable
 							onPress={handleClose}
 							className="bg-accent p-4 rounded-lg w-full active:opacity-70"
@@ -47,7 +48,7 @@ function Modal() {
 								/>
 							</View>
 						</Pressable>
-					</Card.Footer>
+					</CardFooter>
 				</Card>
 			</View>
 		</Container>

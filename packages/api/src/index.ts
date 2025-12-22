@@ -1,5 +1,6 @@
 
 export { appRouter, type AppRouter } from "./routers";
+export { superuserRouter as superuserAppRouter } from "./routers/superuser";
 export {
   router,
   publicProcedure,

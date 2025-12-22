@@ -1,6 +1,9 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { useThemeColor } from "heroui-native";
+import { useThemeColor } from "@/hooks/use-theme-color";
+
+import { Link } from "expo-router";
+import { Pressable } from "react-native";
 
 export default function TabLayout() {
 	const themeColorForeground = useThemeColor("foreground");
@@ -9,7 +12,7 @@ export default function TabLayout() {
 	return (
 		<Tabs
 			screenOptions={{
-				headerShown: false,
+				headerShown: true,
 				headerStyle: {
 					backgroundColor: themeColorBackground,
 				},
@@ -21,6 +24,17 @@ export default function TabLayout() {
 				tabBarStyle: {
 					backgroundColor: themeColorBackground,
 				},
+				headerRight: () => (
+					<Link href="/modal" asChild>
+						<Pressable className="mr-4">
+							<Ionicons
+								name="add-outline"
+								size={24}
+								color={themeColorForeground}
+							/>
+						</Pressable>
+					</Link>
+				),
 			}}
 		>
 			<Tabs.Screen
@@ -33,9 +47,10 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
-				name="two"
+				name="components"
 				options={{
-					title: "Explore",
+					headerShown: false,
+					title: "Components",
 					tabBarIcon: ({ color, size }: { color: string; size: number }) => (
 						<Ionicons name="compass" size={size} color={color} />
 					),
