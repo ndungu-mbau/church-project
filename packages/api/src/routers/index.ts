@@ -1,5 +1,5 @@
 
-import { router } from "../trpc";
+import { router, publicProcedure } from "../trpc";
 import { memberRouter } from "./member";
 import { staffRouter } from "./staff";
 import { pastorRouter } from "./pastor";
@@ -7,6 +7,7 @@ import { adminRouter } from "./admin";
 import { invitesRouter } from "./invites";
 
 export const appRouter = router({
+  healthCheck: publicProcedure.query(() => "OK"),
   member: memberRouter,
   staff: staffRouter,
   pastor: pastorRouter,
