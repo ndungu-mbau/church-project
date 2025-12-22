@@ -1,10 +1,11 @@
-
 import type { BetterAuthPlugin } from "better-auth";
 import { createAuthEndpoint, APIError } from "better-auth/api";
 import { z } from "zod";
 import { otpStorage, sendSms } from "@church-project/utils";
 import { db } from "@church-project/db";
 import { profiles } from "@church-project/db/schema/profiles";
+import { members } from "@church-project/db/schema/members";
+import { staff } from "@church-project/db/schema/staff";
 import { eq } from "drizzle-orm";
 
 export const otpPluginServer = () => {
@@ -15,19 +16,42 @@ export const otpPluginServer = () => {
         "/otp/send",
         {
           method: "POST",
-          body: z.object({
-            phone: z.string(),
-          }).refine((data) => data.phone, {
-            message: "Phone number is required",
-          }),
+          body: z
+            .object({
+              phone: z.string(),
+            })
+            .refine((data) => data.phone, {
+              message: "Phone number is required",
+            }),
         },
         async (ctx) => {
           const { phone } = ctx.body;
 
-          console.log({ phone })
+          console.log({ phone });
 
           if (!phone) {
-             throw new APIError("BAD_REQUEST", { message: "phone required" });
+            throw new APIError("BAD_REQUEST", { message: "phone required" });
+          }
+
+          // Enforce: phone OTP only for existing staff or member records
+          const profileForPhone = await db.query.profiles.findFirst({
+            where: eq(profiles.phone, phone),
+          });
+          if (!profileForPhone) {
+            throw new APIError("FORBIDDEN", {
+              message: "Phone not eligible for OTP login",
+            });
+          }
+          const hasMember = await db.query.members.findFirst({
+            where: eq(members.profileId, profileForPhone.id),
+          });
+          const hasStaff = await db.query.staff.findFirst({
+            where: eq(staff.profileId, profileForPhone.id),
+          });
+          if (!hasMember && !hasStaff) {
+            throw new APIError("FORBIDDEN", {
+              message: "Phone login allowed only for staff or members",
+            });
           }
 
           // Rate limiting
@@ -75,18 +99,20 @@ export const otpPluginServer = () => {
         "/otp/verify",
         {
           method: "POST",
-          body: z.object({
-            phone: z.string(),
-            code: z.string(),
-          }).refine((data) => data.phone, {
-            message: "Phone number is required",
-          }),
+          body: z
+            .object({
+              phone: z.string(),
+              code: z.string(),
+            })
+            .refine((data) => data.phone, {
+              message: "Phone number is required",
+            }),
         },
         async (ctx) => {
           const { phone, code } = ctx.body;
 
           if (!phone) {
-             throw new APIError("BAD_REQUEST", { message: "phone required" });
+            throw new APIError("BAD_REQUEST", { message: "phone required" });
           }
 
           // Verify OTP
@@ -109,28 +135,40 @@ export const otpPluginServer = () => {
             where: eq(profiles.phone, phone),
             with: {
               user: true,
-            }
+            },
           });
 
-          console.log({ existingProfile })
+          console.log({ existingProfile });
 
           if (!existingProfile) {
-              throw new APIError("INTERNAL_SERVER_ERROR", {
-                message: "No profile with phone found",
+            throw new APIError("INTERNAL_SERVER_ERROR", {
+              message: "No profile with phone found",
             });
-          } 
-          
-          if(!existingProfile.user.id) {
+          }
+
+          if (!existingProfile.user?.id) {
             throw new APIError("INTERNAL_SERVER_ERROR", {
               message: "No user with phone found",
-          })
+            });
           }
-            // Update verified status if not already
-            if (phone && !existingProfile.phoneVerified) {
-              await ctx.context.internalAdapter.updateUser(existingProfile.id, {
-                phoneVerified: true,
-              });
-            }
+          // Enforce: phone OTP only for existing staff or member records
+          const memberForProfile = await db.query.members.findFirst({
+            where: eq(members.profileId, existingProfile.id),
+          });
+          const staffForProfile = await db.query.staff.findFirst({
+            where: eq(staff.profileId, existingProfile.id),
+          });
+          if (!memberForProfile && !staffForProfile) {
+            throw new APIError("FORBIDDEN", {
+              message: "Phone login allowed only for staff or members",
+            });
+          }
+          // Update verified status if not already
+          if (phone && !existingProfile.phoneVerified) {
+            await ctx.context.internalAdapter.updateUser(existingProfile.id, {
+              phoneVerified: true,
+            });
+          }
 
           // Create session
           const session = await ctx.context.internalAdapter.createSession(
@@ -142,12 +180,15 @@ export const otpPluginServer = () => {
               message: "Failed to create session",
             });
           }
-          
+
           // Return session, client should handle it or we rely on better-auth defaults
           // await ctx.context.setSessionCookie(session);
 
-          await ctx.context.setNewSession({ session, user: existingProfile.user })
-          return ctx.context.session
+          await ctx.context.setNewSession({
+            session,
+            user: existingProfile.user,
+          });
+          return ctx.context.session;
         }
       ),
     },
