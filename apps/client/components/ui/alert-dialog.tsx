@@ -13,27 +13,28 @@ const AlertDialogPortal = AlertDialogPrimitive.Portal;
 const AlertDialogOverlay = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Overlay>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Overlay>
->(({ className, ...props }, ref) => (
+>(({ className, children, ...props }, ref) => (
   <AlertDialogPrimitive.Overlay
-    style={StyleSheet.absoluteFill}
+    style={Platform.OS !== 'web' ? StyleSheet.absoluteFill : undefined}
     className={cn(
-      'z-50 bg-black/80 flex justify-center items-center p-2',
-      'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
+      'z-50 flex items-center justify-center bg-black/80 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0',
       className
     )}
     {...props}
     ref={ref}
-  />
+  >
+    {children}
+  </AlertDialogPrimitive.Overlay>
 ));
 AlertDialogOverlay.displayName = AlertDialogPrimitive.Overlay.displayName;
 
 const alertDialogContentVariants = cva(
-  'z-50 border border-border bg-background p-6 shadow-lg max-w-lg w-full gap-4 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
+  'z-50 max-w-lg gap-4 border border-border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95',
   {
     variants: {
       variant: {
         default: 'rounded-lg',
-        surface: 'rounded-3xl bg-card dark:bg-popover-foreground',
+        surface: 'rounded-3xl bg-surface-2',
       },
     },
     defaultVariants: {
@@ -46,14 +47,16 @@ const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content> &
   VariantProps<typeof alertDialogContentVariants> & { portalHost?: string }
->(({ className, portalHost, variant, ...props }, ref) => (
+>(({ className, portalHost, variant, children, ...props }, ref) => (
   <AlertDialogPortal hostName={portalHost}>
     <AlertDialogOverlay>
       <AlertDialogPrimitive.Content
         ref={ref}
         className={cn(alertDialogContentVariants({ variant }), className)}
         {...props}
-      />
+      >
+        {children}
+      </AlertDialogPrimitive.Content>
     </AlertDialogOverlay>
   </AlertDialogPortal>
 ));

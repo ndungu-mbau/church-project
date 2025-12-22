@@ -37,6 +37,8 @@ import {
 
 export default function DropdownMenuDemo() {
   const [position, setPosition] = React.useState('bottom');
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [isSubOpen, setIsSubOpen] = React.useState(false);
 
   return (
     <View className="flex-1 p-8 bg-background gap-8 flex-col items-center pt-24">
@@ -47,7 +49,7 @@ export default function DropdownMenuDemo() {
         </Text>
       </View>
 
-      <DropdownMenu>
+      <DropdownMenu onOpenChange={setIsMenuOpen}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
             <Text className='text-foreground'>Open Menu</Text>
@@ -84,7 +86,7 @@ export default function DropdownMenuDemo() {
               <Users size={14} className="text-foreground" />
               <Text className='text-foreground'>Team</Text>
             </DropdownMenuItem>
-            <DropdownMenuSub>
+            {/* <DropdownMenuSub open={isSubOpen} onOpenChange={setIsSubOpen}>
               <DropdownMenuSubTrigger>
                 <UserPlus size={14} className="text-foreground" />
                 <Text className='text-foreground'>Invite users</Text>
@@ -106,7 +108,7 @@ export default function DropdownMenuDemo() {
                   </DropdownMenuItem>
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
-            </DropdownMenuSub>
+            </DropdownMenuSub> */}
             <DropdownMenuItem>
               <Plus size={14} className="text-foreground" />
               <Text className='text-foreground'>New Team</Text>
