@@ -11,10 +11,12 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
 
 
 export default function AlertDialogDemo() {
-  const [isOpen, setIsOpen] = React.useState(false);
+  const [isDefaultOpen, setIsDefaultOpen] = React.useState(false);
+  const [isSurfaceOpen, setIsSurfaceOpen] = React.useState(false);
 
   return (
     <View className="flex-1 justify-center items-center p-8 bg-background gap-8">
@@ -26,11 +28,11 @@ export default function AlertDialogDemo() {
       </View>
 
       {/* Default Variant */}
-      <AlertDialog>
+      <AlertDialog open={isDefaultOpen} onOpenChange={setIsDefaultOpen}>
         <AlertDialogTrigger asChild>
-          <View className='bg-primary px-4 py-2 rounded-md'>
+          <Button>
             <Text className='text-primary-foreground font-medium'>Show Default Alert</Text>
-          </View>
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -47,11 +49,11 @@ export default function AlertDialogDemo() {
       </AlertDialog>
 
       {/* Surface Variant*/}
-      <AlertDialog>
+      <AlertDialog open={isSurfaceOpen} onOpenChange={setIsSurfaceOpen}>
         <AlertDialogTrigger asChild>
-          <View className='bg-zinc-100 dark:bg-zinc-800 px-4 py-2 rounded-xl border border-zinc-200 dark:border-zinc-700'>
+          <Button variant="outline">
             <Text className='text-foreground font-medium'>Show Surface Alert</Text>
-          </View>
+          </Button>
         </AlertDialogTrigger>
         <AlertDialogContent variant="surface">
           <AlertDialogHeader>
