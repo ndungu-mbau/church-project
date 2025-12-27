@@ -22,6 +22,27 @@
       "when": 1765035538958,
       "tag": "0002_conscious_sister_grimm",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1766409907815,
+      "tag": "0003_sweet_black_queen",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1766579641491,
+      "tag": "0004_fancy_phantom_reporter",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1766580175290,
+      "tag": "0005_jittery_thunderbird",
+      "breakpoints": true
     }
   ]
 }
