@@ -47,6 +47,42 @@ export default function TabLayout() {
 				}}
 			/>
 			<Tabs.Screen
+				name="events"
+				options={{
+					title: "Events",
+					tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+						<Ionicons name="calendar" size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="groups"
+				options={{
+					title: "Groups",
+					tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+						<Ionicons name="people" size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="prayer"
+				options={{
+					title: "Prayer",
+					tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+						<Ionicons name="chatbubbles" size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
+				name="profile"
+				options={{
+					title: "Profile",
+					tabBarIcon: ({ color, size }: { color: string; size: number }) => (
+						<Ionicons name="person" size={size} color={color} />
+					),
+				}}
+			/>
+			<Tabs.Screen
 				name="components"
 				options={{
 					headerShown: false,
@@ -59,3 +95,5 @@ export default function TabLayout() {
 		</Tabs>
 	);
 }
+
+
