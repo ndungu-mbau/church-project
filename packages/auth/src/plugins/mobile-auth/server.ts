@@ -77,15 +77,12 @@ export const mobileAuthPlugin = () => {
               .returning();
 
             // Create empty member record (guest member - no church assignment)
-            const [newMember] = await db
-              .insert(members)
-              .values({
-                userId: user.id,
-                profileId: newProfile?.id,
-                email: user.email,
-                // No churchId means "Global Church" / unassigned
-              })
-              .returning();
+            await db.insert(members).values({
+              userId: user.id,
+              profileId: newProfile?.id,
+              email: user.email,
+              // No churchId means "Global Church" / unassigned
+            });
 
             // User role is already 'guest' by default from better-auth config
 

@@ -1,9 +1,10 @@
 import type { BetterAuthPlugin } from "better-auth";
-import { createAuthMiddleware } from "better-auth/plugins"
+import { createAuthMiddleware } from "better-auth/plugins";
 import { db } from "@church-project/db";
 import { members } from "@church-project/db/schema/members";
 import { staff } from "@church-project/db/schema/staff";
 import { profiles } from "@church-project/db/schema/profiles";
+import { user } from "@church-project/db/schema/auth";
 import { eq } from "drizzle-orm";
 
 export const profileLinkerPlugin = () => {
@@ -13,23 +14,30 @@ export const profileLinkerPlugin = () => {
       after: [
         {
           matcher: (ctx) => {
-            return ctx.path.includes("/sign-up") || ctx.path.includes("/callback");
+            const p = ctx.path || "";
+            return (
+              p.includes("/sign-up") ||
+              p.includes("/sign-in") ||
+              p.includes("/register") ||
+              p.includes("/callback")
+            );
           },
           handler: createAuthMiddleware(async (ctx) => {
             let user = ctx.context?.newSession?.user;
 
             // Fallback: Try to parse from response if not in context
             if (!user && ctx.body) {
-               try {
-                   const body = ctx.body;
-                   if (body?.user) {
-                       user = body.user;
-                   } else if (body?.data?.user) { // handling potential wrapper
-                        user = body.data.user;
-                   }
-               } catch (e) {
-                   // ignore json parse error
-               }
+              try {
+                const body = ctx.body;
+                if (body?.user) {
+                  user = body.user;
+                } else if (body?.data?.user) {
+                  // handling potential wrapper
+                  user = body.data.user;
+                }
+              } catch (e) {
+                // ignore json parse error
+              }
             }
 
             if (!user || !user.email) {
@@ -37,11 +45,11 @@ export const profileLinkerPlugin = () => {
             }
 
             try {
-                await linkProfileByEmail(user.id, user.email);
+              await linkProfileByEmail(user.id, user.email);
             } catch (error) {
-                console.error("Failed to link profile:", error);
+              console.error("Failed to link profile:", error);
             }
-            
+
             return;
           }),
         },
@@ -52,6 +60,24 @@ export const profileLinkerPlugin = () => {
 
 async function linkProfileByEmail(userId: string, email: string) {
   console.log({ userId, email });
+  const currentUser = await db.query.user.findFirst({
+    where: eq(user.id, userId),
+  });
+
+  const roleRank: Record<string, number> = {
+    guest: 0,
+    member: 1,
+    staff: 2,
+    pastor: 3,
+    admin: 4,
+    superadmin: 5,
+  };
+
+  const currentRole = currentUser?.role ?? "guest";
+  let desiredRole = currentRole;
+
+  console.log({ currentRole, desiredRole });
+
   // 1. Find member by email
   const member = await db.query.members.findFirst({
     where: eq(members.email, email),
@@ -61,7 +87,8 @@ async function linkProfileByEmail(userId: string, email: string) {
     // Link Member to User
     // If the member already has a user ID, we might be overwriting it, or it might be null.
     // Assuming strict claiming, we update it.
-    await db.update(members)
+    await db
+      .update(members)
       .set({ userId: userId })
       .where(eq(members.id, member.id));
 
@@ -70,9 +97,14 @@ async function linkProfileByEmail(userId: string, email: string) {
       // We only update if the profile doesn't have a user ID yet,
       // OR if we assume this is the definitive claiming action.
       // Given the task, we want to assign the user.
-      await db.update(profiles)
+      await db
+        .update(profiles)
         .set({ userId: userId })
         .where(eq(profiles.id, member.profileId));
+    }
+
+    if ((roleRank[desiredRole] ?? 0) < (roleRank.member ?? 1)) {
+      desiredRole = "member";
     }
   }
 
@@ -81,17 +113,46 @@ async function linkProfileByEmail(userId: string, email: string) {
     where: eq(staff.email, email),
   });
 
+  console.log({ staffMember });
+
   if (staffMember) {
     // Link Staff to User
-    await db.update(staff)
+    await db
+      .update(staff)
       .set({ userId: userId })
       .where(eq(staff.id, staffMember.id));
 
     // Link Profile to User (if exists)
     if (staffMember.profileId) {
-      await db.update(profiles)
+      await db
+        .update(profiles)
         .set({ userId: userId })
         .where(eq(profiles.id, staffMember.profileId));
+    } else {
+      // Create empty profile for staff
+      const [profile] = await db
+        .insert(profiles)
+        .values({
+          id: crypto.randomUUID(),
+          userId: userId,
+        })
+        .returning();
+
+      await db
+        .update(staff)
+        .set({ profileId: profile?.id })
+        .where(eq(staff.id, staffMember.id));
     }
+
+    if ((roleRank[desiredRole] ?? 0) < (roleRank.staff ?? 2)) {
+      desiredRole = "staff";
+    }
+  }
+
+  if (desiredRole !== currentRole) {
+    await db
+      .update(user)
+      .set({ role: desiredRole as any })
+      .where(eq(user.id, userId));
   }
 }

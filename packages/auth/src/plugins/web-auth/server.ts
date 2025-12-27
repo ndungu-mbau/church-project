@@ -13,9 +13,12 @@ export const webAuthPlugin = () => {
       after: [
         {
           matcher: (ctx) => {
-            // Match sign-in related paths
+            const p = ctx.path || "";
             return (
-              ctx.path.includes("/sign-in") || ctx.path.includes("/callback")
+              p.includes("/sign-up") ||
+              p.includes("/sign-in") ||
+              p.includes("/register") ||
+              p.includes("/callback")
             );
           },
           handler: createAuthMiddleware(async (ctx) => {
