@@ -43,6 +43,13 @@
       "when": 1766580175290,
       "tag": "0005_jittery_thunderbird",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1767938900920,
+      "tag": "0006_wise_the_call",
+      "breakpoints": true
     }
   ]
 }
