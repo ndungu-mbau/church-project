@@ -2,13 +2,18 @@ import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/utils/trpc";
 import { useState } from "react";
 import {
-	ActivityIndicator,
-	Text,
-	TextInput,
-	Pressable,
-	View,
-} from "react-native";
-import { Card, useThemeColor } from "heroui-native";
+	Card,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+	CardContent,
+	CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { Redirect, useRouter } from "expo-router";
 
 function signUpHandler({
 	name,
@@ -54,22 +59,43 @@ export function SignUp() {
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
-	const mutedColor = useThemeColor("muted");
-	const accentColor = useThemeColor("accent");
-	const foregroundColor = useThemeColor("foreground");
-	const dangerColor = useThemeColor("danger");
+	const router = useRouter()
 
-	function handlePress() {
-		signUpHandler({
-			name,
-			email,
-			password,
-			setError,
-			setIsLoading,
-			setName,
-			setEmail,
-			setPassword,
-		});
+	async function handleSignUp() {
+		setIsLoading(true);
+
+		await authClient.signUp.email(
+			{
+				name,
+				email,
+				password,
+			},
+			{
+				onError(error) {
+					toast({
+						title: "Sign up failed",
+						description: error.error?.message || "Please check your details.",
+						variant: "destructive",
+					});
+					setIsLoading(false);
+				},
+				onSuccess() {
+					setName("");
+					setEmail("");
+					setPassword("");
+					toast({
+						title: "Account created!",
+						description: "You have successfully signed up.",
+						variant: "success",
+					});
+					queryClient.refetchQueries();
+					router.replace('/(tabs)')
+				},
+				onFinished() {
+					setIsLoading(false);
+				},
+			}
+		);
 	}
 
 	return (

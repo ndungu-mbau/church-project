@@ -9,15 +9,15 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { AppThemeProvider } from "@/contexts/app-theme-context";
 
 import { queryClient } from "@/utils/trpc";
-
-export const unstable_settings = {
-	initialRouteName: "(drawer)",
-};
+import { Toaster } from "@/components/ui/toaster";
+import { SessionProvider } from "@/contexts/auth-context";
 
 function StackLayout() {
 	return (
-		<Stack screenOptions={{}}>
-			<Stack.Screen name="(drawer)" options={{ headerShown: false }} />
+		<Stack screenOptions={{
+		}}>
+			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+			<Stack.Screen name="(auth)" options={{ headerShown: false }} />
 			<Stack.Screen
 				name="modal"
 				options={{ title: "Modal", presentation: "modal" }}
@@ -26,18 +26,21 @@ function StackLayout() {
 	);
 }
 
+
 export default function Layout() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<GestureHandlerRootView style={{ flex: 1 }}>
-				<KeyboardProvider>
-					<AppThemeProvider>
-						<HeroUINativeProvider>
+			<SessionProvider>
+				<GestureHandlerRootView style={{ flex: 1 }}>
+					<KeyboardProvider>
+						<AppThemeProvider>
 							<StackLayout />
-						</HeroUINativeProvider>
-					</AppThemeProvider>
-				</KeyboardProvider>
-			</GestureHandlerRootView>
+							<Toaster />
+							<PortalHost />
+						</AppThemeProvider>
+					</KeyboardProvider>
+				</GestureHandlerRootView>
+			</SessionProvider>
 		</QueryClientProvider>
 	);
 }
