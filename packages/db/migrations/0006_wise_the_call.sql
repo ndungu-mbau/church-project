@@ -1,0 +1,2 @@
+ALTER TABLE "church" ADD COLUMN "admin_id" uuid;--> statement-breakpoint
+ALTER TABLE "church" ADD CONSTRAINT "church_admin_id_user_id_fk" FOREIGN KEY ("admin_id") REFERENCES "public"."user"("id") ON DELETE no action ON UPDATE no action;

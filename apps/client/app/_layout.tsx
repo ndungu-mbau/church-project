@@ -10,15 +10,14 @@ import { PortalHost } from "@rn-primitives/portal";
 
 import { queryClient } from "@/utils/trpc";
 import { Toaster } from "@/components/ui/toaster";
-
-export const unstable_settings = {
-	initialRouteName: "(tabs)",
-};
+import { SessionProvider } from "@/contexts/auth-context";
 
 function StackLayout() {
 	return (
-		<Stack screenOptions={{}}>
+		<Stack screenOptions={{
+		}}>
 			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+			<Stack.Screen name="(auth)" options={{ headerShown: false }} />
 			<Stack.Screen
 				name="modal"
 				options={{ title: "Modal", presentation: "modal" }}
@@ -27,18 +26,21 @@ function StackLayout() {
 	);
 }
 
+
 export default function Layout() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<GestureHandlerRootView style={{ flex: 1 }}>
-				<KeyboardProvider>
-					<AppThemeProvider>
-						<StackLayout />
-						<Toaster />
-						<PortalHost />
-					</AppThemeProvider>
-				</KeyboardProvider>
-			</GestureHandlerRootView>
+			<SessionProvider>
+				<GestureHandlerRootView style={{ flex: 1 }}>
+					<KeyboardProvider>
+						<AppThemeProvider>
+							<StackLayout />
+							<Toaster />
+							<PortalHost />
+						</AppThemeProvider>
+					</KeyboardProvider>
+				</GestureHandlerRootView>
+			</SessionProvider>
 		</QueryClientProvider>
 	);
 }

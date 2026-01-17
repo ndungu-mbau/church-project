@@ -10,6 +10,7 @@ import { profileLinkerPlugin } from "./plugins/profile-linker";
 import { platformDetectorPlugin } from "./plugins/platform-detector";
 import { webAuthPlugin } from "./plugins/web-auth";
 import { mobileAuthPlugin } from "./plugins/mobile-auth";
+import { adminRegistrationPlugin } from "./plugins/admin-registration";
 
 export const auth = betterAuth<BetterAuthOptions>({
   database: drizzleAdapter(db, {
@@ -49,6 +50,7 @@ export const auth = betterAuth<BetterAuthOptions>({
   },
   plugins: [
     platformDetectorPlugin(),
+    adminRegistrationPlugin(),
     profileLinkerPlugin(),
     mobileAuthPlugin(),
     webAuthPlugin(),

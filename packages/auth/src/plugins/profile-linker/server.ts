@@ -25,6 +25,11 @@ export const profileLinkerPlugin = () => {
           handler: createAuthMiddleware(async (ctx) => {
             let user = ctx.context?.newSession?.user;
 
+            console.log({
+              user,
+              session: ctx.context.session,
+            });
+
             // Fallback: Try to parse from response if not in context
             if (!user && ctx.body) {
               try {
@@ -59,10 +64,16 @@ export const profileLinkerPlugin = () => {
 };
 
 async function linkProfileByEmail(userId: string, email: string) {
-  console.log({ userId, email });
   const currentUser = await db.query.user.findFirst({
     where: eq(user.id, userId),
+    with: {
+      profiles: true,
+    },
   });
+
+  if (currentUser?.profiles?.churchId) {
+    return;
+  }
 
   const roleRank: Record<string, number> = {
     guest: 0,
@@ -75,8 +86,6 @@ async function linkProfileByEmail(userId: string, email: string) {
 
   const currentRole = currentUser?.role ?? "guest";
   let desiredRole = currentRole;
-
-  console.log({ currentRole, desiredRole });
 
   // 1. Find member by email
   const member = await db.query.members.findFirst({
@@ -112,8 +121,6 @@ async function linkProfileByEmail(userId: string, email: string) {
   const staffMember = await db.query.staff.findFirst({
     where: eq(staff.email, email),
   });
-
-  console.log({ staffMember });
 
   if (staffMember) {
     // Link Staff to User

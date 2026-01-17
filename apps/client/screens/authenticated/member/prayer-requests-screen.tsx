@@ -11,6 +11,7 @@ import { MessageSquare, Send, History, CheckCircle2, Clock } from "lucide-react-
 import { useState } from "react";
 import React from "react";
 import { format } from "date-fns";
+import { KeyboardAvoidingLayout } from "@/components/keyboard-avoiding-layout";
 
 export function PrayerRequestsScreen() {
   const [request, setRequest] = useState("");
@@ -51,12 +52,13 @@ export function PrayerRequestsScreen() {
   );
 
   return (
-    <View className="flex-1 bg-background">
+    <KeyboardAvoidingLayout className="flex-1 bg-background">
       <FlatList
         data={myRequests.data}
         renderItem={renderRequest}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ padding: 24, paddingBottom: 100 }}
+        scrollEnabled={false} // Disable FlatList scroll because KeyboardAvoidingLayout (ScrollView) will handle it
         ListHeaderComponent={() => (
           <View>
             <View className="mb-6">
@@ -97,9 +99,8 @@ export function PrayerRequestsScreen() {
             <Text className="text-muted italic text-sm">You haven't submitted any requests yet.</Text>
           </View>
         )}
-        onRefresh={() => myRequests.refetch()}
-        refreshing={myRequests.isRefetching}
       />
-    </View>
+    </KeyboardAvoidingLayout>
   );
 }
+

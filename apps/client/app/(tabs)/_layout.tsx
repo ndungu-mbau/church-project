@@ -25,11 +25,11 @@ export default function TabLayout() {
 					backgroundColor: themeColorBackground,
 				},
 				headerRight: () => (
-					<Link href="/modal" asChild>
+					<Link href="/profile" asChild>
 						<Pressable className="mr-4">
 							<Ionicons
-								name="add-outline"
-								size={24}
+								name="person-circle-outline"
+								size={28}
 								color={themeColorForeground}
 							/>
 						</Pressable>
@@ -92,8 +92,15 @@ export default function TabLayout() {
 					),
 				}}
 			/>
+			<Tabs.Screen
+				name="profile"
+				options={{
+					href: null, // Hide from tab bar
+				}}
+			/>
 		</Tabs>
 	);
 }
+
 
 

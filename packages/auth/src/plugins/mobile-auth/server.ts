@@ -44,7 +44,7 @@ export const mobileAuthPlugin = () => {
             }
 
             if (!user) {
-              return;
+              return ctx;
             }
 
             // Check if user already has a linked member record
@@ -54,7 +54,7 @@ export const mobileAuthPlugin = () => {
 
             if (existingMember) {
               // Already linked, no need to create guest
-              return;
+              return ctx;
             }
 
             // Check if profile-linker already linked via email
@@ -64,8 +64,13 @@ export const mobileAuthPlugin = () => {
 
             if (linkedByEmail) {
               // Will be/was handled by profile-linker
-              return;
+              return ctx;
             }
+
+            console.log({
+              user,
+              session: ctx.context.session,
+            });
 
             // Create empty profile for guest
             const [newProfile] = await db
@@ -86,7 +91,10 @@ export const mobileAuthPlugin = () => {
 
             // User role is already 'guest' by default from better-auth config
 
-            return;
+            return ctx.json({
+              user,
+              session: ctx.context.session,
+            });
           }),
         },
       ],

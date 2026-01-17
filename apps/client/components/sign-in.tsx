@@ -14,12 +14,17 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Redirect, useRouter } from "expo-router";
 
 function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const { toast } = useToast();
+
+	const session = authClient.useSession()
+
+	const router = useRouter()
 
 	async function handleLogin() {
 		setIsLoading(true);
@@ -38,7 +43,7 @@ function SignIn() {
 					});
 					setIsLoading(false);
 				},
-				onSuccess() {
+				async onSuccess() {
 					setEmail("");
 					setPassword("");
 					toast({
@@ -47,6 +52,7 @@ function SignIn() {
 						variant: "success",
 					});
 					queryClient.refetchQueries();
+					router.replace('/(tabs)')
 				},
 				onFinished() {
 					setIsLoading(false);

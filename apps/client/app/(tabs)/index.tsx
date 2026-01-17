@@ -1,15 +1,18 @@
 import { authClient } from "@/lib/auth-client";
 import { DashboardScreen } from "@/screens/authenticated/member/dashboard-screen";
-import { LandingScreen } from "@/screens/auth/landing-screen";
+import { Redirect } from "expo-router";
 import React from "react";
 
 export default function Home() {
-	const { data: session } = authClient.useSession();
+	const { data: session, isPending, refetch } = authClient.useSession();
 
-	if (session?.user) {
-		return <DashboardScreen />;
+	if (isPending) return null;
+
+	if (!session?.user) {
+		return <Redirect href="/login" />;
 	}
 
-	return <LandingScreen />;
+	return <DashboardScreen />;
 }
+
 

@@ -24,6 +24,10 @@ export const webAuthPlugin = () => {
           handler: createAuthMiddleware(async (ctx) => {
             const platform = (ctx as any).platform as Platform;
 
+            console.log({
+              user: ctx.context.newSession?.user,
+              session: ctx.context.session,
+            });
             // Only enforce on web platform
             if (platform !== "web") {
               return;
@@ -33,11 +37,15 @@ export const webAuthPlugin = () => {
             if (!REJECT_MEMBERS_ON_WEB) {
               return;
             }
-
             // Get user from session/response
             const user = ctx.context?.newSession?.user;
+            const isRegistering = (ctx as any).context.returned?.isRegistering;
 
-            if (user && (user.role === "member" || user.role === "guest")) {
+            if (
+              user &&
+              (user.role === "member" || user.role === "guest") &&
+              !isRegistering
+            ) {
               throw new APIError("FORBIDDEN", {
                 message:
                   "Members cannot access the web dashboard. Please use the mobile app.",
