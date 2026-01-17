@@ -30,6 +30,8 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
 			cause: "No session",
 		});
 	};
+
+	console.log({ existingUser })
 	
 	return next({
 		ctx: {

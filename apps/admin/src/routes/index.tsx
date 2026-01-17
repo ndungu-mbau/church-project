@@ -4,6 +4,9 @@ import { useQuery } from "@tanstack/react-query";
 
 export const Route = createFileRoute("/")({
 	component: HomeComponent,
+	loader: async ({ context }) => {
+		await context.queryClient.prefetchQuery(trpc.healthCheck.queryOptions());
+	},
 });
 
 const TITLE_TEXT = `

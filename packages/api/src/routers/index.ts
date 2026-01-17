@@ -7,7 +7,10 @@ import { adminRouter } from "./admin";
 import { invitesRouter } from "./invites";
 
 export const appRouter = router({
-  healthCheck: publicProcedure.query(() => "OK"),
+  healthCheck: publicProcedure.query(async () => {
+    await new Promise((done) => setTimeout(done, 5000));
+    return "OK";
+  }),
   member: memberRouter,
   staff: staffRouter,
   pastor: pastorRouter,

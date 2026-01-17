@@ -15,13 +15,34 @@ export const adminStaffRouter = router({
         role: z.enum(["staff", "pastor", "admin"]),
         position: z.string(),
         department: z.string().optional(),
+        // Bio props below
         phone: z.string().optional(),
+        bio: z.string().optional(),
+        address: z.string().optional(),
+        city: z.string().optional(),
+        state: z.string().optional(),
+        country: z.string().optional(),
+        postalCode: z.string().optional(),
+        dateOfBirth: z.coerce.date().optional(),
       })
     )
     .mutation(async ({ ctx, input }) => {
       const targetUser = await db.query.user.findFirst({
         where: (u, { eq }) => eq(u.email, input.email),
       });
+
+      const existingStaffByEmail = await db.query.staff.findFirst({
+        where: (s, { eq, and }) =>
+          and(eq(s.email, input.email), eq(s.churchId, ctx.session.churchId!)),
+      });
+
+      if (existingStaffByEmail) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message:
+            "A staff record with this email already exists in this church.",
+        });
+      }
 
       const existingStaff = targetUser
         ? await db.query.staff.findFirst({
@@ -43,26 +64,68 @@ export const adminStaffRouter = router({
       if (targetUser) {
         await db
           .update(user)
-          .set({ role: input.role as any })
+          .set({ role: input.role })
           .where(eq(user.id, targetUser.id));
       }
 
-      const [profile] = await db
-        .insert(profiles)
-        .values({
-          userId: targetUser?.id ?? (null as any),
-          phone: input.phone,
-          churchId: ctx.session.churchId!,
-        })
-        .returning();
+      const dateOfBirth = input.dateOfBirth
+        ? input.dateOfBirth.toISOString().slice(0, 10)
+        : undefined;
+
+      const profileValues: Partial<typeof profiles.$inferInsert> = {
+        phone: input.phone,
+        bio: input.bio,
+        address: input.address,
+        city: input.city,
+        state: input.state,
+        country: input.country,
+        postalCode: input.postalCode,
+        dateOfBirth,
+        churchId: ctx.session.churchId!,
+      };
+
+      let profile: typeof profiles.$inferSelect | undefined;
+
+      if (targetUser) {
+        const existingProfile = await db.query.profiles.findFirst({
+          where: (p, { eq }) => eq(p.userId, targetUser.id),
+        });
+
+        if (existingProfile) {
+          const [updated] = await db
+            .update(profiles)
+            .set(profileValues)
+            .where(eq(profiles.id, existingProfile.id))
+            .returning();
+          profile = updated;
+        } else {
+          const [created] = await db
+            .insert(profiles)
+            .values({
+              userId: targetUser.id,
+              ...profileValues,
+            })
+            .returning();
+          profile = created;
+        }
+      } else {
+        const [created] = await db
+          .insert(profiles)
+          .values({
+            userId: null,
+            ...profileValues,
+          })
+          .returning();
+        profile = created;
+      }
 
       await db.insert(staff).values({
-        userId: targetUser?.id ?? (null as any),
+        userId: targetUser?.id ?? null,
         email: input.email,
         position: input.position,
         department: input.department,
         startDate: new Date(),
-        profileId: profile?.id ?? (null as any),
+        profileId: profile?.id ?? null,
         churchId: ctx.session.churchId!,
       });
 
