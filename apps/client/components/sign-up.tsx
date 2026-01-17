@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { Redirect, useRouter } from "expo-router";
 
 function SignUp() {
 	const [name, setName] = useState("");
@@ -21,6 +22,8 @@ function SignUp() {
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const { toast } = useToast();
+
+	const router = useRouter()
 
 	async function handleSignUp() {
 		setIsLoading(true);
@@ -50,6 +53,7 @@ function SignUp() {
 						variant: "success",
 					});
 					queryClient.refetchQueries();
+					router.replace('/(tabs)')
 				},
 				onFinished() {
 					setIsLoading(false);

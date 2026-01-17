@@ -3,6 +3,7 @@ import { createAuthClient } from "better-auth/react";
 import { inferAdditionalFields } from "better-auth/client/plugins";
 
 import { profileLinkerClient } from "@church-project/auth/plugins/profile-linker/client";
+import { adminRegistrationClient } from "@church-project/auth/plugins/admin-registration/client";
 
 export const authClient = createAuthClient({
   baseURL: import.meta.env.VITE_SERVER_URL,
@@ -11,5 +12,9 @@ export const authClient = createAuthClient({
       "x-platform": "web",
     },
   },
-  plugins: [inferAdditionalFields<typeof auth>(), profileLinkerClient()],
+  plugins: [
+    inferAdditionalFields<typeof auth>(),
+    profileLinkerClient(),
+    adminRegistrationClient(),
+  ],
 });
