@@ -1,29 +1,33 @@
 import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/utils/trpc";
 import { useState } from "react";
+import { View, ActivityIndicator, Text } from "react-native";
 import {
-	ActivityIndicator,
-	Text,
-	TextInput,
-	Pressable,
-	View,
-} from "react-native";
-import { Card, useThemeColor } from "heroui-native";
+	Card,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+	CardContent,
+	CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { Redirect, useRouter } from "expo-router";
 
 function SignIn() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const { toast } = useToast();
 
-	const mutedColor = useThemeColor("muted");
-	const accentColor = useThemeColor("accent");
-	const foregroundColor = useThemeColor("foreground");
-	const dangerColor = useThemeColor("danger");
+	const session = authClient.useSession()
+
+	const router = useRouter()
 
 	async function handleLogin() {
 		setIsLoading(true);
-		setError(null);
 
 		await authClient.signIn.email(
 			{
@@ -32,61 +36,75 @@ function SignIn() {
 			},
 			{
 				onError(error) {
-					setError(error.error?.message || "Failed to sign in");
+					toast({
+						title: "Sign in failed",
+						description: error.error?.message || "Please check your credentials.",
+						variant: "destructive",
+					});
 					setIsLoading(false);
 				},
-				onSuccess() {
+				async onSuccess() {
 					setEmail("");
 					setPassword("");
+					toast({
+						title: "Welcome back!",
+						description: "You have successfully signed in.",
+						variant: "success",
+					});
 					queryClient.refetchQueries();
+					router.replace('/(tabs)')
 				},
 				onFinished() {
 					setIsLoading(false);
 				},
-			},
+			}
 		);
 	}
 
 	return (
-		<Card variant="secondary" className="mt-6 p-4">
-			<Card.Title className="mb-4">Sign In</Card.Title>
-
-			{error ? (
-				<View className="mb-4 p-3 bg-danger/10 rounded-lg">
-					<Text className="text-danger text-sm">{error}</Text>
+		<Card className="mt-6 border-none shadow-none bg-transparent">
+			<CardHeader className="px-0">
+				<CardTitle className="text-2xl">Sign In</CardTitle>
+				<CardDescription>
+					Enter your email and password to access your account.
+				</CardDescription>
+			</CardHeader>
+			<CardContent className="px-0 gap-4">
+				<View className="gap-1.5">
+					<Label nativeID="email-label">Email</Label>
+					<Input
+						aria-labelledby="email-label"
+						placeholder="name@example.com"
+						value={email}
+						onChangeText={setEmail}
+						keyboardType="email-address"
+						autoCapitalize="none"
+					/>
 				</View>
-			) : null}
-
-			<TextInput
-				className="mb-3 py-3 px-4 rounded-lg bg-surface text-foreground border border-divider"
-				placeholder="Email"
-				value={email}
-				onChangeText={setEmail}
-				placeholderTextColor={mutedColor}
-				keyboardType="email-address"
-				autoCapitalize="none"
-			/>
-
-			<TextInput
-				className="mb-4 py-3 px-4 rounded-lg bg-surface text-foreground border border-divider"
-				placeholder="Password"
-				value={password}
-				onChangeText={setPassword}
-				placeholderTextColor={mutedColor}
-				secureTextEntry
-			/>
-
-			<Pressable
-				onPress={handleLogin}
-				disabled={isLoading}
-				className="bg-accent p-4 rounded-lg flex-row justify-center items-center active:opacity-70"
-			>
-				{isLoading ? (
-					<ActivityIndicator size="small" color={foregroundColor} />
-				) : (
-					<Text className="text-foreground font-medium">Sign In</Text>
-				)}
-			</Pressable>
+				<View className="gap-1.5">
+					<Label nativeID="password-label">Password</Label>
+					<Input
+						aria-labelledby="password-label"
+						placeholder="••••••••"
+						value={password}
+						onChangeText={setPassword}
+						secureTextEntry
+					/>
+				</View>
+			</CardContent>
+			<CardFooter className="px-0 pt-2">
+				<Button
+					className="w-full"
+					onPress={handleLogin}
+					disabled={isLoading}
+				>
+					{isLoading ? (
+						<ActivityIndicator size="small" color="white" />
+					) : (
+						<Text className="text-primary-foreground font-medium">Sign In</Text>
+					)}
+				</Button>
+			</CardFooter>
 		</Card>
 	);
 }

@@ -1,125 +1,122 @@
 import { authClient } from "@/lib/auth-client";
 import { queryClient } from "@/utils/trpc";
 import { useState } from "react";
+import { View, ActivityIndicator, Text } from "react-native";
 import {
-	ActivityIndicator,
-	Text,
-	TextInput,
-	Pressable,
-	View,
-} from "react-native";
-import { Card, useThemeColor } from "heroui-native";
+	Card,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+	CardContent,
+	CardFooter,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { Redirect, useRouter } from "expo-router";
 
-function signUpHandler({
-	name,
-	email,
-	password,
-	setError,
-	setIsLoading,
-	setName,
-	setEmail,
-	setPassword,
-}) {
-	setIsLoading(true);
-	setError(null);
-
-	authClient.signUp.email(
-		{
-			name,
-			email,
-			password,
-		},
-		{
-			onError(error) {
-				setError(error.error?.message || "Failed to sign up");
-				setIsLoading(false);
-			},
-			onSuccess() {
-				setName("");
-				setEmail("");
-				setPassword("");
-				queryClient.refetchQueries();
-			},
-			onFinished() {
-				setIsLoading(false);
-			},
-		},
-	);
-}
-
-export function SignUp() {
+function SignUp() {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
-	const [error, setError] = useState<string | null>(null);
+	const { toast } = useToast();
 
-	const mutedColor = useThemeColor("muted");
-	const accentColor = useThemeColor("accent");
-	const foregroundColor = useThemeColor("foreground");
-	const dangerColor = useThemeColor("danger");
+	const router = useRouter()
 
-	function handlePress() {
-		signUpHandler({
-			name,
-			email,
-			password,
-			setError,
-			setIsLoading,
-			setName,
-			setEmail,
-			setPassword,
-		});
+	async function handleSignUp() {
+		setIsLoading(true);
+
+		await authClient.signUp.email(
+			{
+				name,
+				email,
+				password,
+			},
+			{
+				onError(error) {
+					toast({
+						title: "Sign up failed",
+						description: error.error?.message || "Please check your details.",
+						variant: "destructive",
+					});
+					setIsLoading(false);
+				},
+				onSuccess() {
+					setName("");
+					setEmail("");
+					setPassword("");
+					toast({
+						title: "Account created!",
+						description: "You have successfully signed up.",
+						variant: "success",
+					});
+					queryClient.refetchQueries();
+					router.replace('/(tabs)')
+				},
+				onFinished() {
+					setIsLoading(false);
+				},
+			}
+		);
 	}
 
 	return (
-		<Card variant="secondary" className="mt-6 p-4">
-			<Card.Title className="mb-4">Create Account</Card.Title>
-
-			{error && (
-				<View className="mb-4 p-3 bg-danger/10 rounded-lg">
-					<Text className="text-danger text-sm">{error}</Text>
+		<Card className="mt-6 border-none shadow-none bg-transparent">
+			<CardHeader className="px-0">
+				<CardTitle className="text-2xl">Create Account</CardTitle>
+				<CardDescription>
+					Join us today to manage your church activities effortlessly.
+				</CardDescription>
+			</CardHeader>
+			<CardContent className="px-0 gap-4">
+				<View className="gap-1.5">
+					<Label nativeID="name-label">Full Name</Label>
+					<Input
+						aria-labelledby="name-label"
+						placeholder="John Doe"
+						value={name}
+						onChangeText={setName}
+					/>
 				</View>
-			)}
-
-			<TextInput
-				className="mb-3 py-3 px-4 rounded-lg bg-surface text-foreground border border-divider"
-				placeholder="Name"
-				value={name}
-				onChangeText={setName}
-				placeholderTextColor={mutedColor}
-			/>
-
-			<TextInput
-				className="mb-3 py-3 px-4 rounded-lg bg-surface text-foreground border border-divider"
-				placeholder="Email"
-				value={email}
-				onChangeText={setEmail}
-				placeholderTextColor={mutedColor}
-				keyboardType="email-address"
-				autoCapitalize="none"
-			/>
-
-			<TextInput
-				className="mb-4 py-3 px-4 rounded-lg bg-surface text-foreground border border-divider"
-				placeholder="Password"
-				value={password}
-				onChangeText={setPassword}
-				placeholderTextColor={mutedColor}
-				secureTextEntry
-			/>
-
-			<Pressable
-				onPress={handlePress}
-				disabled={isLoading}
-				className="bg-accent p-4 rounded-lg flex-row justify-center items-center active:opacity-70"
-			>
-				{isLoading ? (
-					<ActivityIndicator size="small" color={foregroundColor} />
-				) : (
-					<Text className="text-foreground font-medium">Sign Up</Text>
-				)}
-			</Pressable>
+				<View className="gap-1.5">
+					<Label nativeID="email-signup-label">Email</Label>
+					<Input
+						aria-labelledby="email-signup-label"
+						placeholder="name@example.com"
+						value={email}
+						onChangeText={setEmail}
+						keyboardType="email-address"
+						autoCapitalize="none"
+					/>
+				</View>
+				<View className="gap-1.5">
+					<Label nativeID="password-signup-label">Password</Label>
+					<Input
+						aria-labelledby="password-signup-label"
+						placeholder="••••••••"
+						value={password}
+						onChangeText={setPassword}
+						secureTextEntry
+					/>
+				</View>
+			</CardContent>
+			<CardFooter className="px-0 pt-2">
+				<Button
+					className="w-full"
+					onPress={handleSignUp}
+					disabled={isLoading}
+				>
+					{isLoading ? (
+						<ActivityIndicator size="small" color="white" />
+					) : (
+						<Text className="text-primary-foreground font-medium">Sign Up</Text>
+					)}
+				</Button>
+			</CardFooter>
 		</Card>
 	);
 }
+
+export { SignUp };

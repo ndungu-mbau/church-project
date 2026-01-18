@@ -3,10 +3,10 @@ import "@/global.css";
 import { QueryClientProvider } from "@tanstack/react-query";
 
 import { Stack } from "expo-router";
-import { HeroUINativeProvider } from "heroui-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { AppThemeProvider } from "@/contexts/app-theme-context";
+import { PortalHost } from "@rn-primitives/portal";
 
 import { queryClient } from "@/utils/trpc";
 import { Toaster } from "@/components/ui/toaster";
@@ -32,18 +32,21 @@ function StackLayout() {
 	);
 }
 
+
 export default function Layout() {
 	return (
 		<QueryClientProvider client={queryClient}>
-			<GestureHandlerRootView style={{ flex: 1 }}>
-				<KeyboardProvider>
-					<AppThemeProvider>
-						<HeroUINativeProvider>
+			<SessionProvider>
+				<GestureHandlerRootView style={{ flex: 1 }}>
+					<KeyboardProvider>
+						<AppThemeProvider>
 							<StackLayout />
-						</HeroUINativeProvider>
-					</AppThemeProvider>
-				</KeyboardProvider>
-			</GestureHandlerRootView>
+							<Toaster />
+							<PortalHost />
+						</AppThemeProvider>
+					</KeyboardProvider>
+				</GestureHandlerRootView>
+			</SessionProvider>
 		</QueryClientProvider>
 	);
 }

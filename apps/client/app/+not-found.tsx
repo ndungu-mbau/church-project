@@ -1,7 +1,7 @@
 import { Container } from "@/components/container";
 import { Link, Stack } from "expo-router";
 import { Text, View, Pressable } from "react-native";
-import { Card } from "heroui-native";
+import { Card, CardTitle, CardDescription } from "@/components/ui/card";
 
 export default function NotFoundScreen() {
 	return (
@@ -9,14 +9,14 @@ export default function NotFoundScreen() {
 			<Stack.Screen options={{ title: "Oops!" }} />
 			<Container>
 				<View className="flex-1 justify-center items-center p-6">
-					<Card variant="secondary" className="items-center p-8 max-w-md">
+					<Card variant="surface-1" className="items-center p-8 max-w-md">
 						<Text className="text-6xl mb-4">🤔</Text>
-						<Card.Title className="text-2xl text-center mb-2">
+						<CardTitle className="text-2xl text-center mb-2">
 							Page Not Found
-						</Card.Title>
-						<Card.Description className="text-center mb-6">
+						</CardTitle>
+						<CardDescription className="text-center mb-6">
 							Sorry, the page you're looking for doesn't exist.
-						</Card.Description>
+						</CardDescription>
 						<Link href="/" asChild>
 							<Pressable className="bg-accent px-6 py-3 rounded-lg active:opacity-70">
 								<Text className="text-accent-foreground font-medium text-base">

@@ -14,7 +14,7 @@ export default function SignInForm({
 	onSwitchToSignUp: () => void;
 }) {
 	const navigate = useNavigate({
-		from: "/",
+		from: "/login",
 	});
 	const { isPending } = authClient.useSession();
 
@@ -128,10 +128,10 @@ export default function SignInForm({
 			<div className="mt-4 text-center">
 				<Button
 					variant="link"
-					onClick={onSwitchToSignUp}
+					onClick={() => navigate({ to: "/register" })}
 					className="text-indigo-600 hover:text-indigo-800"
 				>
-					Need an account? Sign Up
+					Need to register a church? Sign Up
 				</Button>
 			</div>
 		</div>
