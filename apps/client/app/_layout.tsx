@@ -9,19 +9,25 @@ import { KeyboardProvider } from "react-native-keyboard-controller";
 import { AppThemeProvider } from "@/contexts/app-theme-context";
 
 import { queryClient } from "@/utils/trpc";
-
-export const unstable_settings = {
-	initialRouteName: "(drawer)",
-};
+import { Toaster } from "@/components/ui/toaster";
+import { SessionProvider, useSession } from "@/contexts/auth-context";
 
 function StackLayout() {
+	const { session, isLoading } = useSession();
+
+	if (isLoading) {
+		return null;
+	}
+
 	return (
-		<Stack screenOptions={{}}>
-			<Stack.Screen name="(drawer)" options={{ headerShown: false }} />
-			<Stack.Screen
-				name="modal"
-				options={{ title: "Modal", presentation: "modal" }}
-			/>
+		<Stack screenOptions={{
+		}}>
+			<Stack.Protected guard={!!session}>
+				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+			</Stack.Protected>
+			<Stack.Protected guard={!session}>
+				<Stack.Screen name="(auth)" options={{ headerShown: false }} />
+			</Stack.Protected>
 		</Stack>
 	);
 }
