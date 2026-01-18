@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { trpc } from "@/utils/trpc";
 import { useQuery } from "@tanstack/react-query";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_app/")({
 	component: HomeComponent,
 	loader: async ({ context }) => {
 		await context.queryClient.prefetchQuery(trpc.healthCheck.queryOptions());
@@ -49,5 +49,5 @@ function HomeComponent() {
 				</section>
 			</div>
 		</div>
-	);
+	)
 }

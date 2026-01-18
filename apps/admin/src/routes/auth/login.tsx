@@ -3,7 +3,7 @@ import SignUpForm from "@/components/sign-up-form";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/auth/login")({
 	component: RouteComponent,
 });
 
@@ -14,5 +14,5 @@ function RouteComponent() {
 		<SignInForm onSwitchToSignUp={() => setShowSignIn(false)} />
 	) : (
 		<SignUpForm onSwitchToSignIn={() => setShowSignIn(true)} />
-	);
+	)
 }
