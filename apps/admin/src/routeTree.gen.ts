@@ -12,11 +12,12 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AuthRegisterChurchRouteImport } from './routes/auth/register-church'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
-import { Route as AuthRegisterIndexRouteImport } from './routes/auth/register/index'
-import { Route as AuthRegisterOnboardingRouteImport } from './routes/auth/register/onboarding'
+import { Route as AuthRegisterChurchIndexRouteImport } from './routes/auth/register-church/index'
+import { Route as AuthRegisterChurchOnboardingRouteImport } from './routes/auth/register-church/onboarding'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -31,6 +32,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppRoute,
+} as any)
+const AuthRegisterChurchRoute = AuthRegisterChurchRouteImport.update({
+  id: '/register-church',
+  path: '/register-church',
+  getParentRoute: () => AuthRoute,
 } as any)
 const AuthRegisterRoute = AuthRegisterRouteImport.update({
   id: '/register',
@@ -47,33 +53,36 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
-const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
+const AuthRegisterChurchIndexRoute = AuthRegisterChurchIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => AuthRegisterRoute,
+  getParentRoute: () => AuthRegisterChurchRoute,
 } as any)
-const AuthRegisterOnboardingRoute = AuthRegisterOnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
-  getParentRoute: () => AuthRegisterRoute,
-} as any)
+const AuthRegisterChurchOnboardingRoute =
+  AuthRegisterChurchOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => AuthRegisterChurchRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/register': typeof AuthRegisterRouteWithChildren
-  '/auth/register/onboarding': typeof AuthRegisterOnboardingRoute
-  '/auth/register/': typeof AuthRegisterIndexRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/register-church': typeof AuthRegisterChurchRouteWithChildren
+  '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
+  '/auth/register-church/': typeof AuthRegisterChurchIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
-  '/auth/register/onboarding': typeof AuthRegisterOnboardingRoute
-  '/auth/register': typeof AuthRegisterIndexRoute
+  '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
+  '/auth/register-church': typeof AuthRegisterChurchIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -81,10 +90,11 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/register': typeof AuthRegisterRouteWithChildren
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/register-church': typeof AuthRegisterChurchRouteWithChildren
   '/_app/': typeof AppIndexRoute
-  '/auth/register/onboarding': typeof AuthRegisterOnboardingRoute
-  '/auth/register/': typeof AuthRegisterIndexRoute
+  '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
+  '/auth/register-church/': typeof AuthRegisterChurchIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -94,16 +104,18 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/auth/login'
     | '/auth/register'
-    | '/auth/register/onboarding'
-    | '/auth/register/'
+    | '/auth/register-church'
+    | '/auth/register-church/onboarding'
+    | '/auth/register-church/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/dashboard'
     | '/auth/login'
-    | '/'
-    | '/auth/register/onboarding'
     | '/auth/register'
+    | '/'
+    | '/auth/register-church/onboarding'
+    | '/auth/register-church'
   id:
     | '__root__'
     | '/_app'
@@ -111,9 +123,10 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/auth/login'
     | '/auth/register'
+    | '/auth/register-church'
     | '/_app/'
-    | '/auth/register/onboarding'
-    | '/auth/register/'
+    | '/auth/register-church/onboarding'
+    | '/auth/register-church/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -144,6 +157,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/auth/register-church': {
+      id: '/auth/register-church'
+      path: '/register-church'
+      fullPath: '/auth/register-church'
+      preLoaderRoute: typeof AuthRegisterChurchRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/auth/register': {
       id: '/auth/register'
       path: '/register'
@@ -165,19 +185,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
-    '/auth/register/': {
-      id: '/auth/register/'
+    '/auth/register-church/': {
+      id: '/auth/register-church/'
       path: '/'
-      fullPath: '/auth/register/'
-      preLoaderRoute: typeof AuthRegisterIndexRouteImport
-      parentRoute: typeof AuthRegisterRoute
+      fullPath: '/auth/register-church/'
+      preLoaderRoute: typeof AuthRegisterChurchIndexRouteImport
+      parentRoute: typeof AuthRegisterChurchRoute
     }
-    '/auth/register/onboarding': {
-      id: '/auth/register/onboarding'
+    '/auth/register-church/onboarding': {
+      id: '/auth/register-church/onboarding'
       path: '/onboarding'
-      fullPath: '/auth/register/onboarding'
-      preLoaderRoute: typeof AuthRegisterOnboardingRouteImport
-      parentRoute: typeof AuthRegisterRoute
+      fullPath: '/auth/register-church/onboarding'
+      preLoaderRoute: typeof AuthRegisterChurchOnboardingRouteImport
+      parentRoute: typeof AuthRegisterChurchRoute
     }
   }
 }
@@ -194,28 +214,29 @@ const AppRouteChildren: AppRouteChildren = {
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
-interface AuthRegisterRouteChildren {
-  AuthRegisterOnboardingRoute: typeof AuthRegisterOnboardingRoute
-  AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+interface AuthRegisterChurchRouteChildren {
+  AuthRegisterChurchOnboardingRoute: typeof AuthRegisterChurchOnboardingRoute
+  AuthRegisterChurchIndexRoute: typeof AuthRegisterChurchIndexRoute
 }
 
-const AuthRegisterRouteChildren: AuthRegisterRouteChildren = {
-  AuthRegisterOnboardingRoute: AuthRegisterOnboardingRoute,
-  AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+const AuthRegisterChurchRouteChildren: AuthRegisterChurchRouteChildren = {
+  AuthRegisterChurchOnboardingRoute: AuthRegisterChurchOnboardingRoute,
+  AuthRegisterChurchIndexRoute: AuthRegisterChurchIndexRoute,
 }
 
-const AuthRegisterRouteWithChildren = AuthRegisterRoute._addFileChildren(
-  AuthRegisterRouteChildren,
-)
+const AuthRegisterChurchRouteWithChildren =
+  AuthRegisterChurchRoute._addFileChildren(AuthRegisterChurchRouteChildren)
 
 interface AuthRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
-  AuthRegisterRoute: typeof AuthRegisterRouteWithChildren
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthRegisterChurchRoute: typeof AuthRegisterChurchRouteWithChildren
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
-  AuthRegisterRoute: AuthRegisterRouteWithChildren,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthRegisterChurchRoute: AuthRegisterChurchRouteWithChildren,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
