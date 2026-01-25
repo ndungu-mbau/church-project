@@ -50,6 +50,13 @@
       "when": 1767938900920,
       "tag": "0006_wise_the_call",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1769319759094,
+      "tag": "0007_ancient_praxagora",
+      "breakpoints": true
     }
   ]
 }
