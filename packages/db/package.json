@@ -34,6 +34,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@church-project/utils": "workspace:*",
     "drizzle-orm": "catalog:",
     "pg": "^8.14.1",
     "dotenv": "catalog:",
