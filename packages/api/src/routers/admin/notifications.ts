@@ -348,4 +348,24 @@ export const adminNotificationsRouter = router({
 
       return items;
     }),
+
+  // Get notifications for a specific event (for event details view)
+  getEventNotifications: adminProcedure
+    .input(z.object({ eventId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const items = await db.query.notifications.findMany({
+        where: (n, { eq, and }) =>
+          and(
+            eq(n.churchId, ctx.session.churchId!),
+            eq(n.eventId, input.eventId)
+          ),
+        with: {
+          sender: true,
+          group: true,
+        },
+        orderBy: (n, { desc }) => desc(n.createdAt),
+      });
+
+      return items;
+    }),
 });
