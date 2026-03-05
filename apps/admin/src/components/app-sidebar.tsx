@@ -8,7 +8,9 @@ import {
   Users,
   UserCog,
   BookOpen,
-  Video
+  Video,
+  UsersRound,
+  Bell,
 } from "lucide-react"
 import { Link, useLocation } from "@tanstack/react-router"
 
@@ -22,11 +24,29 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
   SidebarRail,
 } from "@/components/ui/sidebar"
 
 // Menu sections.
-const sections = [
+interface NavItem {
+  title: string
+  url: string
+  icon: React.ElementType
+  items?: {
+    title: string
+    url: string
+  }[]
+}
+
+interface NavSection {
+  label: string
+  items: NavItem[]
+}
+
+const sections: NavSection[] = [
   {
     label: "General",
     items: [
@@ -65,6 +85,11 @@ const sections = [
         url: "/members",
         icon: Users,
       },
+      {
+        title: "Groups",
+        url: "/groups",
+        icon: UsersRound,
+      },
     ],
   },
   {
@@ -74,11 +99,46 @@ const sections = [
         title: "Devotions",
         url: "/devotions",
         icon: BookOpen,
+        items: [
+          {
+            title: "View All",
+            url: "/devotions",
+          },
+          {
+            title: "Add New",
+            url: "/devotions/add",
+          },
+        ],
       },
       {
         title: "Sermons",
         url: "/sermons",
         icon: Video,
+        items: [
+          {
+            title: "View All",
+            url: "/sermons",
+          },
+          {
+            title: "Add New",
+            url: "/sermons/add",
+          },
+        ],
+      },
+      {
+        title: "Notifications",
+        url: "/notifications",
+        icon: Bell,
+        items: [
+          {
+            title: "View All",
+            url: "/notifications",
+          },
+          {
+            title: "Create",
+            url: "/notifications/add",
+          },
+        ],
       },
     ],
   },
@@ -115,6 +175,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
+                    {item.items?.length ? (
+                      <SidebarMenuSub>
+                        {item.items.map((subItem) => (
+                          <SidebarMenuSubItem key={subItem.title}>
+                            <SidebarMenuSubButton
+                              asChild
+                              isActive={location.pathname === subItem.url}
+                            >
+                              <Link to={subItem.url}>
+                                <span>{subItem.title}</span>
+                              </Link>
+                            </SidebarMenuSubButton>
+                          </SidebarMenuSubItem>
+                        ))}
+                      </SidebarMenuSub>
+                    ) : null}
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
