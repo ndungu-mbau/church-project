@@ -93,14 +93,14 @@ export function GroupForm({ initialValues, onSubmit, isSubmitting, onCancel }: G
           <div className="space-y-2">
             <Label>Group Leader</Label>
             <Select
-              value={field.state.value || ''}
-              onValueChange={(value) => field.handleChange(value || null)}
+              value={field.state.value || '__none__'}
+              onValueChange={(value) => field.handleChange(value === '__none__' ? null : value)}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select a leader (optional)" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">No Leader (You will be assigned)</SelectItem>
+                <SelectItem value="__none__">No Leader (You will be assigned)</SelectItem>
                 {membersQuery.data?.map((member) => (
                   <SelectItem key={member.id} value={member.userId || ''}>
                     {member.user?.name || member.user?.email || 'Unknown'}
