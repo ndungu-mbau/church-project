@@ -241,6 +241,7 @@ function GroupDetail() {
                 initialValues={{
                   name: group?.name || '',
                   description: group?.description || '',
+                  leaderId: group?.leaderId || null,
                 }}
                 onSubmit={async (values) => {
                   await updateGroup.mutateAsync({

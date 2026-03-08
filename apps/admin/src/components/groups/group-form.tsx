@@ -5,22 +5,35 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Loader2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { trpc } from '@/utils/trpc'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface GroupFormProps {
   initialValues?: {
     name: string
     description?: string
+    leaderId?: string | null
   }
-  onSubmit: (values: { name: string; description?: string }) => Promise<void>
+  onSubmit: (values: { name: string; description?: string; leaderId?: string | null }) => Promise<void>
   isSubmitting?: boolean
   onCancel?: () => void
 }
 
 export function GroupForm({ initialValues, onSubmit, isSubmitting, onCancel }: GroupFormProps) {
+  const membersQuery = useQuery(trpc.admin.members.list.queryOptions())
+
   const form = useForm({
     defaultValues: initialValues || {
       name: '',
       description: '',
+      leaderId: null,
     },
     onSubmit: async ({ value }) => {
       await onSubmit(value)
@@ -70,6 +83,34 @@ export function GroupForm({ initialValues, onSubmit, isSubmitting, onCancel }: G
               onBlur={field.handleBlur}
               onChange={(e) => field.handleChange(e.target.value)}
             />
+          </div>
+        )}
+      />
+
+      <form.Field
+        name="leaderId"
+        children={(field) => (
+          <div className="space-y-2">
+            <Label>Group Leader</Label>
+            <Select
+              value={field.state.value || ''}
+              onValueChange={(value) => field.handleChange(value || null)}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a leader (optional)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="">No Leader (You will be assigned)</SelectItem>
+                {membersQuery.data?.map((member) => (
+                  <SelectItem key={member.id} value={member.userId || ''}>
+                    {member.user?.name || member.user?.email || 'Unknown'}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <p className="text-xs text-muted-foreground">
+              Leave empty to automatically assign yourself as the leader
+            </p>
           </div>
         )}
       />
