@@ -43,6 +43,7 @@ import { toast } from 'sonner'
 import { useState } from 'react'
 import { GroupForm } from '@/components/groups/group-form'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { AddMemberForm } from '@/components/groups/add-member-form'
 
 export const Route = createFileRoute('/_app/groups/$groupId')({
   component: GroupDetail,
@@ -55,6 +56,7 @@ function GroupDetail() {
 
   const [isEditOpen, setIsEditOpen] = useState(false)
   const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const [isAddMemberOpen, setIsAddMemberOpen] = useState(false)
 
   const groupQuery = useQuery(trpc.admin.groups.get.queryOptions({ id: groupId }))
   const membersQuery = useQuery(trpc.admin.groups.getMembers.queryOptions({ groupId }))
@@ -80,6 +82,17 @@ function GroupDetail() {
     },
     onError: (error: any) => {
       toast.error(error.message || "Failed to delete group")
+    }
+  }))
+
+  const removeMember = useMutation(trpc.admin.groups.removeMember.mutationOptions({
+    onSuccess: () => {
+      toast.success("Member removed from group")
+      queryClient.invalidateQueries({ queryKey: trpc.admin.groups.getMembers.queryKey({ groupId }) })
+      queryClient.invalidateQueries({ queryKey: trpc.admin.groups.getAvailableMembers.queryKey({ groupId }) })
+    },
+    onError: (error: any) => {
+      toast.error(error.message || "Failed to remove member")
     }
   }))
 
@@ -151,7 +164,11 @@ function GroupDetail() {
         <div className="p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold">Group Members</h2>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setIsAddMemberOpen(true)}
+            >
               Add Member
             </Button>
           </div>
@@ -183,7 +200,17 @@ function GroupDetail() {
                   <DropdownMenuContent align="end">
                     <DropdownMenuItem>View Profile</DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">Remove from Group</DropdownMenuItem>
+                    <DropdownMenuItem 
+                      className="text-destructive cursor-pointer"
+                      onClick={() => {
+                        if (member.userId) {
+                          removeMember.mutate({ groupId, userId: member.userId })
+                        }
+                      }}
+                      disabled={removeMember.isPending}
+                    >
+                      Remove from Group
+                    </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
@@ -253,6 +280,25 @@ function GroupDetail() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Add Member Sheet */}
+      <Sheet open={isAddMemberOpen} onOpenChange={setIsAddMemberOpen}>
+        <SheetContent className="sm:max-w-[500px]">
+          <SheetHeader>
+            <SheetTitle>Add Member to Group</SheetTitle>
+            <SheetDescription>
+              Select a member to add to {group?.name}
+            </SheetDescription>
+          </SheetHeader>
+          <div className="mt-4">
+            <AddMemberForm
+              groupId={groupId}
+              onSuccess={() => setIsAddMemberOpen(false)}
+              onCancel={() => setIsAddMemberOpen(false)}
+            />
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   )
 }

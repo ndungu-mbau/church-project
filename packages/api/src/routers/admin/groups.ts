@@ -2,6 +2,7 @@ import { router, adminProcedure } from "../../trpc";
 import { z } from "zod";
 import { db } from "@church-project/db";
 import { groups } from "@church-project/db/schema/groups";
+import { groupMembers } from "@church-project/db/schema/group-members";
 import { notifications } from "@church-project/db/schema/notifications";
 import { eq, and } from "drizzle-orm";
 import { TRPCError } from "@trpc/server";
@@ -167,5 +168,106 @@ export const adminGroupsRouter = router({
       });
 
       return groupNotifications;
+    }),
+
+  addMember: adminProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify group ownership
+      const group = await db.query.groups.findFirst({
+        where: (g, { eq, and }) =>
+          and(eq(g.id, input.groupId), eq(g.churchId, ctx.session.churchId!)),
+      });
+
+      if (!group) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
+      }
+
+      // Check if user is already a member
+      const existingMember = await db.query.groupMembers.findFirst({
+        where: (gm, { eq, and }) =>
+          and(eq(gm.groupId, input.groupId), eq(gm.userId, input.userId)),
+      });
+
+      if (existingMember) {
+        throw new TRPCError({
+          code: "CONFLICT",
+          message: "User is already a member of this group",
+        });
+      }
+
+      const [newMember] = await db
+        .insert(groupMembers)
+        .values({
+          groupId: input.groupId,
+          userId: input.userId,
+        })
+        .returning();
+
+      return newMember;
+    }),
+
+  removeMember: adminProcedure
+    .input(
+      z.object({
+        groupId: z.string(),
+        userId: z.string(),
+      })
+    )
+    .mutation(async ({ ctx, input }) => {
+      // Verify group ownership
+      const group = await db.query.groups.findFirst({
+        where: (g, { eq, and }) =>
+          and(eq(g.id, input.groupId), eq(g.churchId, ctx.session.churchId!)),
+      });
+
+      if (!group) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
+      }
+
+      await db
+        .delete(groupMembers)
+        .where(
+          and(
+            eq(groupMembers.groupId, input.groupId),
+            eq(groupMembers.userId, input.userId)
+          )
+        );
+
+      return { success: true };
+    }),
+
+  getAvailableMembers: adminProcedure
+    .input(z.object({ groupId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      // Verify group ownership
+      const group = await db.query.groups.findFirst({
+        where: (g, { eq, and }) =>
+          and(eq(g.id, input.groupId), eq(g.churchId, ctx.session.churchId!)),
+      });
+
+      if (!group) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Group not found" });
+      }
+
+      // Get all users in the system
+      const users = await db.query.user.findMany();
+
+      // Get existing group members
+      const existingMembers = await db.query.groupMembers.findMany({
+        where: (gm, { eq }) => eq(gm.groupId, input.groupId),
+      });
+
+      const existingMemberIds = new Set(existingMembers.map((m) => m.userId));
+
+      // Filter out users already in the group
+      const availableUsers = users.filter((u) => !existingMemberIds.has(u.id));
+
+      return availableUsers;
     }),
 });
