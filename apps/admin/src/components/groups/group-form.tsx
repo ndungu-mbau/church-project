@@ -101,8 +101,8 @@ export function GroupForm({ initialValues, onSubmit, isSubmitting, onCancel }: G
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none__">No Leader (You will be assigned)</SelectItem>
-                {membersQuery.data?.map((member) => (
-                  <SelectItem key={member.id} value={member.userId || ''}>
+                {membersQuery.data?.filter(member => member.userId).map((member) => (
+                  <SelectItem key={member.id} value={member.userId!}>
                     {member.user?.name || member.user?.email || 'Unknown'}
                   </SelectItem>
                 ))}
