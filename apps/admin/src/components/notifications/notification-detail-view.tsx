@@ -32,8 +32,7 @@ export function NotificationDetailView({
 		trpc.admin.notifications.get.queryOptions({ id }),
 	);
 
-	const publishMutation = useMutation({
-		mutationFn: () => trpc.admin.notifications.publish.mutate({ id }),
+	const publishMutation = useMutation(trpc.admin.notifications.publish.mutationOptions({
 		onSuccess: () => {
 			toast.success("Notification published successfully");
 			notificationQuery.refetch();
@@ -42,14 +41,14 @@ export function NotificationDetailView({
 		onError: (error) => {
 			toast.error(error.message || "Failed to publish notification");
 		},
-	});
+	}));
 
 	const previewMutation = useQuery(
 		trpc.admin.notifications.preview.queryOptions({ id }),
 	);
 
-	const deleteMutation = useMutation({
-		mutationFn: () => trpc.admin.notifications.delete.mutate({ id }),
+	const deleteMutation = useMutation(trpc.admin.notifications.delete.mutationOptions({
+
 		onSuccess: () => {
 			toast.success("Notification deleted successfully");
 			window.history.back();
@@ -57,7 +56,7 @@ export function NotificationDetailView({
 		onError: (error) => {
 			toast.error(error.message || "Failed to delete notification");
 		},
-	});
+	}));
 
 	if (notificationQuery.isLoading) {
 		return <div className="flex items-center justify-center h-full"><p>Loading...</p></div>;
@@ -163,7 +162,7 @@ export function NotificationDetailView({
 
 					{canPublish && (
 						<Button
-							onClick={() => publishMutation.mutate()}
+							onClick={() => publishMutation.mutate({ id })}
 							disabled={publishMutation.isPending}
 							className="gap-2"
 						>
@@ -225,7 +224,7 @@ export function NotificationDetailView({
 						<AlertDialogCancel>Cancel</AlertDialogCancel>
 						<AlertDialogAction
 							onClick={() => {
-								deleteMutation.mutate();
+								deleteMutation.mutate({ id });
 								setShowDeleteDialog(false);
 							}}
 							disabled={deleteMutation.isPending}

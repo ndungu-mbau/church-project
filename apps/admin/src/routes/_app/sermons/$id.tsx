@@ -20,7 +20,7 @@ export const Route = createFileRoute('/_app/sermons/$id')({
 function SermonDetail() {
   const { id } = Route.useParams()
   const { edit } = useSearch({ from: '/_app/sermons/$id' })
-  const navigate = useNavigate()
+  const navigate = useNavigate({ from: '/_app/sermons/$id' })
 
   const sermonQuery = useQuery(
     trpc.staff.sermons.get.queryOptions({ id })
@@ -28,25 +28,25 @@ function SermonDetail() {
 
   const handleEdit = () => {
     navigate({
-      to: '/sermons/$id',
-      params: { id },
-      search: { edit: true },
+      search: (prev) => ({ ...prev, edit: true }),
     })
   }
 
   const handleCancelEdit = () => {
     navigate({
-      to: '/sermons/$id',
-      params: { id },
-      search: { edit: false },
+      search: (prev) => {
+        const { edit, ...rest } = prev
+        return rest
+      },
     })
   }
 
   const handleEditSuccess = () => {
     navigate({
-      to: '/sermons/$id',
-      params: { id },
-      search: { edit: false },
+      search: (prev) => {
+        const { edit, ...rest } = prev
+        return rest
+      },
     })
   }
 

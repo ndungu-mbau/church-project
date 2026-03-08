@@ -20,7 +20,7 @@ export const Route = createFileRoute('/_app/devotions/$id')({
 function DevotionDetail() {
   const { id } = Route.useParams()
   const { edit } = useSearch({ from: '/_app/devotions/$id' })
-  const navigate = useNavigate()
+  const navigate = useNavigate({ from: '/_app/devotions/$id' })
 
   const devotionQuery = useQuery(
     trpc.staff.devotions.get.queryOptions({ id })
@@ -28,25 +28,25 @@ function DevotionDetail() {
 
   const handleEdit = () => {
     navigate({
-      to: '/devotions/$id',
-      params: { id },
-      search: { edit: true },
+      search: (prev) => ({ ...prev, edit: true }),
     })
   }
 
   const handleCancelEdit = () => {
     navigate({
-      to: '/devotions/$id',
-      params: { id },
-      search: { edit: false },
+      search: (prev) => {
+        const { edit, ...rest } = prev
+        return rest
+      },
     })
   }
 
   const handleEditSuccess = () => {
     navigate({
-      to: '/devotions/$id',
-      params: { id },
-      search: { edit: false },
+      search: (prev) => {
+        const { edit, ...rest } = prev
+        return rest
+      },
     })
   }
 

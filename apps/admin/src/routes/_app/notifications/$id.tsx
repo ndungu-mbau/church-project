@@ -6,64 +6,64 @@ import { trpc } from "@/utils/trpc";
 import Loader from "@/components/loader";
 
 export const Route = createFileRoute("/_app/notifications/$id")({
-component: NotificationDetail,
-validateSearch: (search: any) => ({
-edit: search?.edit === "true" || search?.edit === true,
-}),
+  component: NotificationDetail,
+  validateSearch: (search: any) => ({
+    edit: search?.edit === "true" || search?.edit === true,
+  }),
 });
 
 function NotificationDetail() {
-const { id } = Route.useParams();
-const { edit } = useSearch({ from: "/_app/notifications/$id" });
-const navigate = useNavigate();
+  const { id } = Route.useParams();
+  const { edit } = useSearch({ from: "/_app/notifications/$id" });
+  const navigate = useNavigate({ from: "/_app/notifications/$id" });
 
-const notificationQuery = useQuery(
-trpc.admin.notifications.get.queryOptions({ id }),
-);
+  const notificationQuery = useQuery(
+    trpc.admin.notifications.get.queryOptions({ id }),
+  );
 
-const handleEdit = () => {
-navigate({
-to: "/notifications/$id",
-params: { id },
-search: { edit: true },
-});
-};
+  const handleEdit = () => {
+    navigate({
+      search: (prev) => ({ ...prev, edit: true }),
+    });
+  };
 
-const handleCancelEdit = () => {
-navigate({
-to: "/notifications/$id",
-params: { id },
-search: { edit: false },
-});
-};
+  const handleCancelEdit = () => {
+    navigate({
+      search: (prev) => {
+        const { edit, ...rest } = prev;
+        return rest;
+      },
+    });
+  };
 
-const handleEditSuccess = () => {
-navigate({
-to: "/notifications/$id",
-params: { id },
-search: { edit: false },
-});
-};
+  const handleEditSuccess = () => {
+    navigate({
+      search: (prev) => {
+        const { edit, ...rest } = prev;
+        return rest;
+      },
+    });
+  };
 
-const handleRefresh = () => {
-notificationQuery.refetch();
-};
+  const handleRefresh = () => {
+    notificationQuery.refetch();
+  };
 
-if (notificationQuery.isLoading) {
-return <Loader />;
-}
+  if (notificationQuery.isLoading) {
+    return <Loader />;
+  }
 
-return edit ? (
-<NotificationEditForm
-id={id}
-onSuccess={handleEditSuccess}
-onCancel={handleCancelEdit}
-/>
-) : (
-<NotificationDetailView
-id={id}
-onEdit={handleEdit}
-onRefresh={handleRefresh}
-/>
-);
+  return edit ? (
+    <NotificationEditForm
+      id={id}
+      onSuccess={handleEditSuccess}
+      onCancel={handleCancelEdit}
+    />
+  ) : (
+    <NotificationDetailView
+      id={id}
+      onEdit={handleEdit}
+      onRefresh={handleRefresh}
+    />
+  );
 }

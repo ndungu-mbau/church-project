@@ -56,17 +56,12 @@ export function NotificationEditForm({
 
   const notification = notificationQuery.data;
 
-  // Set initial isChurchWide state when notification data loads
-  if (notification && !notificationQuery.isLoading && !form.state.isDirty && isChurchWide === false && notification.isChurchWide) {
-    setIsChurchWide(true);
-  }
-
   const form = useForm({
     defaultValues: {
       title: notification?.title || "",
       content: notification?.content || "",
-      type: (notification?.type || "ANNOUNCEMENT") as const,
-      priority: (notification?.priority || "DEFAULT") as const,
+      type: notification?.type || "ANNOUNCEMENT",
+      priority: notification?.priority || "DEFAULT",
       isChurchWide: notification?.isChurchWide || true,
       groupId: notification?.groupId || undefined,
     },
@@ -82,6 +77,11 @@ export function NotificationEditForm({
       await updateNotification.mutateAsync(submitData);
     },
   });
+
+  // Set initial isChurchWide state when notification data loads
+  if (notification && !notificationQuery.isLoading && !form.state.isDirty && isChurchWide === false && notification.isChurchWide) {
+    setIsChurchWide(true);
+  }
 
   if (notificationQuery.isLoading) {
     return <div className="p-6"><p>Loading...</p></div>;
