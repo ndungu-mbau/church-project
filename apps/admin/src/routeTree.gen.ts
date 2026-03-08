@@ -16,17 +16,25 @@ import { Route as AuthRegisterChurchRouteImport } from './routes/auth/register-c
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AppSermonsRouteImport } from './routes/_app/sermons'
+import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
+import { Route as AppGroupsRouteImport } from './routes/_app/groups'
 import { Route as AppDevotionsRouteImport } from './routes/_app/devotions'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AuthRegisterChurchIndexRouteImport } from './routes/auth/register-church/index'
 import { Route as AppStaffIndexRouteImport } from './routes/_app/staff/index'
 import { Route as AppSermonsIndexRouteImport } from './routes/_app/sermons/index'
 import { Route as AppMembersIndexRouteImport } from './routes/_app/members/index'
+import { Route as AppGroupsIndexRouteImport } from './routes/_app/groups/index'
 import { Route as AppDevotionsIndexRouteImport } from './routes/_app/devotions/index'
 import { Route as AuthRegisterChurchOnboardingRouteImport } from './routes/auth/register-church/onboarding'
 import { Route as AppStaffIdRouteImport } from './routes/_app/staff/$id'
+import { Route as AppSermonsAddRouteImport } from './routes/_app/sermons/add'
 import { Route as AppSermonsIdRouteImport } from './routes/_app/sermons/$id'
+import { Route as AppNotificationsAddRouteImport } from './routes/_app/notifications/add'
+import { Route as AppNotificationsIdRouteImport } from './routes/_app/notifications/$id'
 import { Route as AppMembersIdRouteImport } from './routes/_app/members/$id'
+import { Route as AppGroupsGroupIdRouteImport } from './routes/_app/groups/$groupId'
+import { Route as AppDevotionsAddRouteImport } from './routes/_app/devotions/add'
 import { Route as AppDevotionsIdRouteImport } from './routes/_app/devotions/$id'
 
 const AuthRoute = AuthRouteImport.update({
@@ -63,6 +71,16 @@ const AppSermonsRoute = AppSermonsRouteImport.update({
   path: '/sermons',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGroupsRoute = AppGroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDevotionsRoute = AppDevotionsRouteImport.update({
   id: '/devotions',
   path: '/devotions',
@@ -93,6 +111,11 @@ const AppMembersIndexRoute = AppMembersIndexRouteImport.update({
   path: '/members/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGroupsIndexRoute = AppGroupsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppGroupsRoute,
+} as any)
 const AppDevotionsIndexRoute = AppDevotionsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -109,15 +132,40 @@ const AppStaffIdRoute = AppStaffIdRouteImport.update({
   path: '/staff/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSermonsAddRoute = AppSermonsAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AppSermonsRoute,
+} as any)
 const AppSermonsIdRoute = AppSermonsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AppSermonsRoute,
 } as any)
+const AppNotificationsAddRoute = AppNotificationsAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AppNotificationsRoute,
+} as any)
+const AppNotificationsIdRoute = AppNotificationsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppNotificationsRoute,
+} as any)
 const AppMembersIdRoute = AppMembersIdRouteImport.update({
   id: '/members/$id',
   path: '/members/$id',
   getParentRoute: () => AppRoute,
+} as any)
+const AppGroupsGroupIdRoute = AppGroupsGroupIdRouteImport.update({
+  id: '/$groupId',
+  path: '/$groupId',
+  getParentRoute: () => AppGroupsRoute,
+} as any)
+const AppDevotionsAddRoute = AppDevotionsAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AppDevotionsRoute,
 } as any)
 const AppDevotionsIdRoute = AppDevotionsIdRouteImport.update({
   id: '/$id',
@@ -130,16 +178,24 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
   '/devotions': typeof AppDevotionsRouteWithChildren
+  '/groups': typeof AppGroupsRouteWithChildren
+  '/notifications': typeof AppNotificationsRouteWithChildren
   '/sermons': typeof AppSermonsRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/register-church': typeof AuthRegisterChurchRouteWithChildren
   '/devotions/$id': typeof AppDevotionsIdRoute
+  '/devotions/add': typeof AppDevotionsAddRoute
+  '/groups/$groupId': typeof AppGroupsGroupIdRoute
   '/members/$id': typeof AppMembersIdRoute
+  '/notifications/$id': typeof AppNotificationsIdRoute
+  '/notifications/add': typeof AppNotificationsAddRoute
   '/sermons/$id': typeof AppSermonsIdRoute
+  '/sermons/add': typeof AppSermonsAddRoute
   '/staff/$id': typeof AppStaffIdRoute
   '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
   '/devotions/': typeof AppDevotionsIndexRoute
+  '/groups/': typeof AppGroupsIndexRoute
   '/members/': typeof AppMembersIndexRoute
   '/sermons/': typeof AppSermonsIndexRoute
   '/staff/': typeof AppStaffIndexRoute
@@ -148,15 +204,22 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/auth': typeof AuthRouteWithChildren
   '/dashboard': typeof AppDashboardRoute
+  '/notifications': typeof AppNotificationsRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/': typeof AppIndexRoute
   '/devotions/$id': typeof AppDevotionsIdRoute
+  '/devotions/add': typeof AppDevotionsAddRoute
+  '/groups/$groupId': typeof AppGroupsGroupIdRoute
   '/members/$id': typeof AppMembersIdRoute
+  '/notifications/$id': typeof AppNotificationsIdRoute
+  '/notifications/add': typeof AppNotificationsAddRoute
   '/sermons/$id': typeof AppSermonsIdRoute
+  '/sermons/add': typeof AppSermonsAddRoute
   '/staff/$id': typeof AppStaffIdRoute
   '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
   '/devotions': typeof AppDevotionsIndexRoute
+  '/groups': typeof AppGroupsIndexRoute
   '/members': typeof AppMembersIndexRoute
   '/sermons': typeof AppSermonsIndexRoute
   '/staff': typeof AppStaffIndexRoute
@@ -168,17 +231,25 @@ export interface FileRoutesById {
   '/auth': typeof AuthRouteWithChildren
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/devotions': typeof AppDevotionsRouteWithChildren
+  '/_app/groups': typeof AppGroupsRouteWithChildren
+  '/_app/notifications': typeof AppNotificationsRouteWithChildren
   '/_app/sermons': typeof AppSermonsRouteWithChildren
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/register-church': typeof AuthRegisterChurchRouteWithChildren
   '/_app/': typeof AppIndexRoute
   '/_app/devotions/$id': typeof AppDevotionsIdRoute
+  '/_app/devotions/add': typeof AppDevotionsAddRoute
+  '/_app/groups/$groupId': typeof AppGroupsGroupIdRoute
   '/_app/members/$id': typeof AppMembersIdRoute
+  '/_app/notifications/$id': typeof AppNotificationsIdRoute
+  '/_app/notifications/add': typeof AppNotificationsAddRoute
   '/_app/sermons/$id': typeof AppSermonsIdRoute
+  '/_app/sermons/add': typeof AppSermonsAddRoute
   '/_app/staff/$id': typeof AppStaffIdRoute
   '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
   '/_app/devotions/': typeof AppDevotionsIndexRoute
+  '/_app/groups/': typeof AppGroupsIndexRoute
   '/_app/members/': typeof AppMembersIndexRoute
   '/_app/sermons/': typeof AppSermonsIndexRoute
   '/_app/staff/': typeof AppStaffIndexRoute
@@ -191,16 +262,24 @@ export interface FileRouteTypes {
     | '/auth'
     | '/dashboard'
     | '/devotions'
+    | '/groups'
+    | '/notifications'
     | '/sermons'
     | '/auth/login'
     | '/auth/register'
     | '/auth/register-church'
     | '/devotions/$id'
+    | '/devotions/add'
+    | '/groups/$groupId'
     | '/members/$id'
+    | '/notifications/$id'
+    | '/notifications/add'
     | '/sermons/$id'
+    | '/sermons/add'
     | '/staff/$id'
     | '/auth/register-church/onboarding'
     | '/devotions/'
+    | '/groups/'
     | '/members/'
     | '/sermons/'
     | '/staff/'
@@ -209,15 +288,22 @@ export interface FileRouteTypes {
   to:
     | '/auth'
     | '/dashboard'
+    | '/notifications'
     | '/auth/login'
     | '/auth/register'
     | '/'
     | '/devotions/$id'
+    | '/devotions/add'
+    | '/groups/$groupId'
     | '/members/$id'
+    | '/notifications/$id'
+    | '/notifications/add'
     | '/sermons/$id'
+    | '/sermons/add'
     | '/staff/$id'
     | '/auth/register-church/onboarding'
     | '/devotions'
+    | '/groups'
     | '/members'
     | '/sermons'
     | '/staff'
@@ -228,17 +314,25 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_app/dashboard'
     | '/_app/devotions'
+    | '/_app/groups'
+    | '/_app/notifications'
     | '/_app/sermons'
     | '/auth/login'
     | '/auth/register'
     | '/auth/register-church'
     | '/_app/'
     | '/_app/devotions/$id'
+    | '/_app/devotions/add'
+    | '/_app/groups/$groupId'
     | '/_app/members/$id'
+    | '/_app/notifications/$id'
+    | '/_app/notifications/add'
     | '/_app/sermons/$id'
+    | '/_app/sermons/add'
     | '/_app/staff/$id'
     | '/auth/register-church/onboarding'
     | '/_app/devotions/'
+    | '/_app/groups/'
     | '/_app/members/'
     | '/_app/sermons/'
     | '/_app/staff/'
@@ -301,6 +395,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSermonsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/groups': {
+      id: '/_app/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof AppGroupsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/devotions': {
       id: '/_app/devotions'
       path: '/devotions'
@@ -343,6 +451,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppMembersIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/groups/': {
+      id: '/_app/groups/'
+      path: '/'
+      fullPath: '/groups/'
+      preLoaderRoute: typeof AppGroupsIndexRouteImport
+      parentRoute: typeof AppGroupsRoute
+    }
     '/_app/devotions/': {
       id: '/_app/devotions/'
       path: '/'
@@ -364,6 +479,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppStaffIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/sermons/add': {
+      id: '/_app/sermons/add'
+      path: '/add'
+      fullPath: '/sermons/add'
+      preLoaderRoute: typeof AppSermonsAddRouteImport
+      parentRoute: typeof AppSermonsRoute
+    }
     '/_app/sermons/$id': {
       id: '/_app/sermons/$id'
       path: '/$id'
@@ -371,12 +493,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSermonsIdRouteImport
       parentRoute: typeof AppSermonsRoute
     }
+    '/_app/notifications/add': {
+      id: '/_app/notifications/add'
+      path: '/add'
+      fullPath: '/notifications/add'
+      preLoaderRoute: typeof AppNotificationsAddRouteImport
+      parentRoute: typeof AppNotificationsRoute
+    }
+    '/_app/notifications/$id': {
+      id: '/_app/notifications/$id'
+      path: '/$id'
+      fullPath: '/notifications/$id'
+      preLoaderRoute: typeof AppNotificationsIdRouteImport
+      parentRoute: typeof AppNotificationsRoute
+    }
     '/_app/members/$id': {
       id: '/_app/members/$id'
       path: '/members/$id'
       fullPath: '/members/$id'
       preLoaderRoute: typeof AppMembersIdRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/_app/groups/$groupId': {
+      id: '/_app/groups/$groupId'
+      path: '/$groupId'
+      fullPath: '/groups/$groupId'
+      preLoaderRoute: typeof AppGroupsGroupIdRouteImport
+      parentRoute: typeof AppGroupsRoute
+    }
+    '/_app/devotions/add': {
+      id: '/_app/devotions/add'
+      path: '/add'
+      fullPath: '/devotions/add'
+      preLoaderRoute: typeof AppDevotionsAddRouteImport
+      parentRoute: typeof AppDevotionsRoute
     }
     '/_app/devotions/$id': {
       id: '/_app/devotions/$id'
@@ -390,11 +540,13 @@ declare module '@tanstack/react-router' {
 
 interface AppDevotionsRouteChildren {
   AppDevotionsIdRoute: typeof AppDevotionsIdRoute
+  AppDevotionsAddRoute: typeof AppDevotionsAddRoute
   AppDevotionsIndexRoute: typeof AppDevotionsIndexRoute
 }
 
 const AppDevotionsRouteChildren: AppDevotionsRouteChildren = {
   AppDevotionsIdRoute: AppDevotionsIdRoute,
+  AppDevotionsAddRoute: AppDevotionsAddRoute,
   AppDevotionsIndexRoute: AppDevotionsIndexRoute,
 }
 
@@ -402,13 +554,42 @@ const AppDevotionsRouteWithChildren = AppDevotionsRoute._addFileChildren(
   AppDevotionsRouteChildren,
 )
 
+interface AppGroupsRouteChildren {
+  AppGroupsGroupIdRoute: typeof AppGroupsGroupIdRoute
+  AppGroupsIndexRoute: typeof AppGroupsIndexRoute
+}
+
+const AppGroupsRouteChildren: AppGroupsRouteChildren = {
+  AppGroupsGroupIdRoute: AppGroupsGroupIdRoute,
+  AppGroupsIndexRoute: AppGroupsIndexRoute,
+}
+
+const AppGroupsRouteWithChildren = AppGroupsRoute._addFileChildren(
+  AppGroupsRouteChildren,
+)
+
+interface AppNotificationsRouteChildren {
+  AppNotificationsIdRoute: typeof AppNotificationsIdRoute
+  AppNotificationsAddRoute: typeof AppNotificationsAddRoute
+}
+
+const AppNotificationsRouteChildren: AppNotificationsRouteChildren = {
+  AppNotificationsIdRoute: AppNotificationsIdRoute,
+  AppNotificationsAddRoute: AppNotificationsAddRoute,
+}
+
+const AppNotificationsRouteWithChildren =
+  AppNotificationsRoute._addFileChildren(AppNotificationsRouteChildren)
+
 interface AppSermonsRouteChildren {
   AppSermonsIdRoute: typeof AppSermonsIdRoute
+  AppSermonsAddRoute: typeof AppSermonsAddRoute
   AppSermonsIndexRoute: typeof AppSermonsIndexRoute
 }
 
 const AppSermonsRouteChildren: AppSermonsRouteChildren = {
   AppSermonsIdRoute: AppSermonsIdRoute,
+  AppSermonsAddRoute: AppSermonsAddRoute,
   AppSermonsIndexRoute: AppSermonsIndexRoute,
 }
 
@@ -419,6 +600,8 @@ const AppSermonsRouteWithChildren = AppSermonsRoute._addFileChildren(
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppDevotionsRoute: typeof AppDevotionsRouteWithChildren
+  AppGroupsRoute: typeof AppGroupsRouteWithChildren
+  AppNotificationsRoute: typeof AppNotificationsRouteWithChildren
   AppSermonsRoute: typeof AppSermonsRouteWithChildren
   AppIndexRoute: typeof AppIndexRoute
   AppMembersIdRoute: typeof AppMembersIdRoute
@@ -430,6 +613,8 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppDevotionsRoute: AppDevotionsRouteWithChildren,
+  AppGroupsRoute: AppGroupsRouteWithChildren,
+  AppNotificationsRoute: AppNotificationsRouteWithChildren,
   AppSermonsRoute: AppSermonsRouteWithChildren,
   AppIndexRoute: AppIndexRoute,
   AppMembersIdRoute: AppMembersIdRoute,

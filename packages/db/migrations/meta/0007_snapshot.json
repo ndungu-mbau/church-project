@@ -1,5 +1,5 @@
 {
-  "id": "1bcb4987-20e5-4719-8e4d-effa7ffb7166",
+  "id": "83966a8a-a50a-42f6-9a25-2f983c4af95c",
   "prevId": "663437ee-efdd-4a2a-af57-2400af3f3177",
   "version": "7",
   "dialect": "postgresql",
@@ -2406,7 +2406,44 @@
           "default": "now()"
         }
       },
-      "indexes": {},
+      "indexes": {
+        "notification_recipients_member_id_read_at_idx": {
+          "name": "notification_recipients_member_id_read_at_idx",
+          "columns": [
+            {
+              "expression": "member_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "read_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "notification_recipients_notification_id_idx": {
+          "name": "notification_recipients_notification_id_idx",
+          "columns": [
+            {
+              "expression": "notification_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "notification_recipients_notification_id_notifications_id_fk": {
           "name": "notification_recipients_notification_id_notifications_id_fk",
@@ -2546,7 +2583,65 @@
           "notNull": false
         }
       },
-      "indexes": {},
+      "indexes": {
+        "notifications_group_id_status_idx": {
+          "name": "notifications_group_id_status_idx",
+          "columns": [
+            {
+              "expression": "group_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "status",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "notifications_sender_id_created_at_idx": {
+          "name": "notifications_sender_id_created_at_idx",
+          "columns": [
+            {
+              "expression": "sender_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "created_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "notifications_church_id_idx": {
+          "name": "notifications_church_id_idx",
+          "columns": [
+            {
+              "expression": "church_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {
         "notifications_sender_id_user_id_fk": {
           "name": "notifications_sender_id_user_id_fk",

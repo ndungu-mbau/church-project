@@ -20,7 +20,7 @@ export const adminRegistrationPlugin = () => {
     hooks: {
       before: [
         {
-          matcher: (ctx) => ctx.path.endsWith("/sign-up/email"),
+          matcher: (ctx) => (ctx.path as any).endsWith("/sign-up/email"),
           handler: createAuthMiddleware(async (ctx) => {
             const isRegistering = ctx.body?.isRegistering;
             return {
@@ -34,7 +34,7 @@ export const adminRegistrationPlugin = () => {
       ],
       after: [
         {
-          matcher: (ctx) => ctx.path.endsWith("/sign-up/email"),
+          matcher: (ctx) => (ctx.path as any).endsWith("/sign-up/email"),
           handler: createAuthMiddleware(async (ctx) => {
             const isRegistering = (ctx as any).body?.isRegistering;
             const user = ctx.context?.newSession?.user;

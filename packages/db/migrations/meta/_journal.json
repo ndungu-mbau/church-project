@@ -54,15 +54,8 @@
     {
       "idx": 7,
       "version": "7",
-      "when": 1772602632738,
-      "tag": "0007_easy_killmonger",
-      "breakpoints": true
-    },
-    {
-      "idx": 8,
-      "version": "7",
-      "when": 1772602966881,
-      "tag": "0008_misty_groot",
+      "when": 1772682931411,
+      "tag": "0007_plain_microchip",
       "breakpoints": true
     }
   ]
