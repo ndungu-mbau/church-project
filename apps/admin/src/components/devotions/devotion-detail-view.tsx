@@ -1,7 +1,8 @@
 import { Button } from '@/components/ui/button'
-import { Calendar, Trash2, ExternalLink, Edit } from 'lucide-react'
+import { Calendar, Trash2, ExternalLink, Edit, BookOpen } from 'lucide-react'
 import Loader from '@/components/loader'
 import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
 import {
@@ -104,6 +105,49 @@ export function DevotionDetailView({ id, onEdit, onRefresh }: DevotionDetailView
             </Button>
           </AlertDescription>
         </Alert>
+      )}
+
+      {devotion.verses && devotion.verses.length > 0 && (
+        <Card className="border-none shadow-sm bg-accent/50">
+          <CardContent className="pt-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold">Bible Verses</h2>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {devotion.verses.map((verse, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center justify-between p-3 bg-background rounded-lg border hover:border-primary/50 transition-colors group"
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <Badge variant="outline" className="shrink-0">
+                        {verse.book}
+                      </Badge>
+                      <span className="text-sm font-medium whitespace-nowrap">
+                        {verse.chapter}:{verse.verses}
+                      </span>
+                    </div>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                      onClick={() => {
+                        // Open bible reference in external Bible service
+                        const bibleUrl = `https://biblehub.com/${verse.book.toLowerCase().replace(/\s+/g, '')}/${verse.chapter}-${verse.verses}.htm`
+                        window.open(bibleUrl, '_blank', 'noopener,noreferrer')
+                      }}
+                      aria-label={`Open ${verse.book} ${verse.chapter}:${verse.verses} in Bible`}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       )}
 
       <Card className="border-none shadow-none bg-muted/30">

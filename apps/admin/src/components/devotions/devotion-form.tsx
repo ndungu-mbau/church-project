@@ -12,15 +12,9 @@ import { CalendarIcon } from 'lucide-react'
 import { Field, FieldContent, FieldError, FieldLabel } from '@/components/ui/field'
 import { cn } from '@/lib/utils'
 import { BIBLE_BOOKS } from '@/constants/bible-books'
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList,
-} from '@/components/ui/combobox'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { PlusIcon, Trash2Icon } from 'lucide-react'
+import { useCallback } from 'react'
 
 interface DevotionFormProps {
   onSuccess?: () => void
@@ -31,14 +25,14 @@ export function DevotionForm({ onSuccess, onCancel }: DevotionFormProps) {
   const queryClient = useQueryClient()
 
   const createDevotion = useMutation(trpc.staff.devotions.create.mutationOptions({
-    onSuccess: () => {
+    onSuccess: useCallback(() => {
       toast.success("Devotion created successfully")
       queryClient.invalidateQueries({ queryKey: trpc.staff.devotions.list.queryKey() })
       onSuccess?.()
-    },
-    onError: (error: any) => {
+    }, [queryClient, onSuccess]),
+    onError: useCallback((error: any) => {
       toast.error(error.message || "Failed to create devotion")
-    }
+    }, [])
   }))
 
   const form = useForm({
@@ -48,19 +42,39 @@ export function DevotionForm({ onSuccess, onCancel }: DevotionFormProps) {
       date: new Date().toISOString().split('T')[0],
       verses: [] as { book: string; chapter: number; verses: string }[],
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: useCallback(async ({ value }) => {
       await createDevotion.mutateAsync(value)
-    }
+    }, [createDevotion])
   })
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    form.handleSubmit()
+  }, [form])
+
+  const handleAddVerse = useCallback((field: any) => {
+    field.pushValue({ book: '', chapter: 1, verses: '' })
+  }, [])
+
+  const handleRemoveVerse = useCallback((field: any, index: number) => {
+    field.removeValue(index)
+  }, [])
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        form.handleSubmit()
-      }}
+      onSubmit={handleSubmit}
       className="space-y-4 flex flex-col h-full"
+      onKeyDown={(e) => {
+        // Handle keyboard navigation for verse management
+        if (e.key === 'Delete' && e.target instanceof HTMLElement && e.target.closest('[data-verse-item]')) {
+          const verseItem = e.target.closest('[data-verse-item]')
+          const deleteButton = verseItem?.querySelector('button[type="button"]')
+          if (deleteButton) {
+            deleteButton.click()
+          }
+        }
+      }}
     >
       <div className="flex-1 space-y-4">
         <form.Field name="title">
@@ -121,14 +135,22 @@ export function DevotionForm({ onSuccess, onCancel }: DevotionFormProps) {
 
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm font-medium">Bible Verses</h3>
+            <h2 className="text-sm font-medium">Bible Verses</h2>
             <form.Field name="verses" mode="array">
               {(field) => (
                 <Button
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => field.pushValue({ book: '', chapter: 1, verses: '' })}
+                  onClick={() => handleAddVerse(field)}
+                  aria-label="Add Bible verse"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      handleAddVerse(field)
+                    }
+                  }}
                 >
                   <PlusIcon className="mr-2 h-4 w-4" />
                   Add Verse
@@ -141,29 +163,28 @@ export function DevotionForm({ onSuccess, onCancel }: DevotionFormProps) {
             {(field) => (
               <div className="space-y-4">
                 {field.state.value.map((_, i) => (
-                  <div key={i} className="flex gap-2 items-start bg-muted/30 p-4 rounded-lg border">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 flex-1">
+                  <div key={i} data-verse-item data-verse-index={i} className="flex gap-2 items-start bg-accent/50 p-4 rounded-lg border focus-within:ring-2 focus-within:ring-ring">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 flex-1">
                       <form.Field name={`verses[${i}].book`}>
                         {(bookField) => (
                           <Field>
                             <FieldLabel>Book</FieldLabel>
                             <FieldContent>
-                              <Combobox
+                              <Select
                                 value={bookField.state.value}
                                 onValueChange={(val) => bookField.handleChange(val as string)}
                               >
-                                <ComboboxInput placeholder="Select book..." />
-                                <ComboboxContent>
-                                  <ComboboxList>
-                                    <ComboboxEmpty>No book found.</ComboboxEmpty>
-                                    {BIBLE_BOOKS.map((book) => (
-                                      <ComboboxItem key={book} value={book}>
-                                        {book}
-                                      </ComboboxItem>
-                                    ))}
-                                  </ComboboxList>
-                                </ComboboxContent>
-                              </Combobox>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Select book..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {BIBLE_BOOKS.map((book) => (
+                                    <SelectItem key={book} value={book}>
+                                      {book}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                             </FieldContent>
                             <FieldError errors={bookField.state.meta.errors} />
                           </Field>
@@ -208,8 +229,16 @@ export function DevotionForm({ onSuccess, onCancel }: DevotionFormProps) {
                       type="button"
                       variant="ghost"
                       size="icon"
-                      className="mt-8 text-destructive"
-                      onClick={() => field.removeValue(i)}
+                      className="mt-8 text-destructive focus:ring-2 focus:ring-destructive"
+                      onClick={() => handleRemoveVerse(field, i)}
+                      aria-label={`Remove verse ${i + 1}`}
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault()
+                          handleRemoveVerse(field, i)
+                        }
+                      }}
                     >
                       <Trash2Icon className="h-4 w-4" />
                     </Button>

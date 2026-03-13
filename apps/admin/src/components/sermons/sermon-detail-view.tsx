@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Calendar, Trash2, ExternalLink, Edit, Tag, Video } from 'lucide-react'
-import Loader from '@/components/loader'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
 import { useNavigate } from '@tanstack/react-router'
@@ -9,7 +9,7 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { trpc } from '@/utils/trpc'
 
@@ -24,6 +24,14 @@ export function SermonDetailView({ id, onEdit, onRefresh }: SermonDetailViewProp
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const sermonQuery = useQuery(trpc.staff.sermons.get.queryOptions({ id }))
+  const confirmDeleteButtonRef = useRef<HTMLButtonElement>(null)
+
+  // Manage focus when delete confirmation appears
+  useEffect(() => {
+    if (showConfirmDelete && confirmDeleteButtonRef.current) {
+      confirmDeleteButtonRef.current.focus()
+    }
+  }, [showConfirmDelete])
 
   const deleteSermon = useMutation(trpc.staff.sermons.delete.mutationOptions({
     onSuccess: () => {
@@ -37,7 +45,41 @@ export function SermonDetailView({ id, onEdit, onRefresh }: SermonDetailViewProp
   }))
 
   if (sermonQuery.isLoading) {
-    return <Loader />
+    return (
+      <div className="p-8 max-w-4xl mx-auto space-y-8">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-3 flex-1">
+            <Skeleton className="h-8 w-3/4" />
+            <div className="flex items-center gap-4">
+              <Skeleton className="h-5 w-32" />
+              <Skeleton className="h-5 w-24" />
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-8 w-20" />
+            <Skeleton className="h-8 w-20" />
+          </div>
+        </div>
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-4">
+            <Skeleton className="h-5 w-32" />
+          </CardHeader>
+          <CardContent className="p-0 bg-black aspect-video" />
+        </Card>
+        <Card className="bg-muted/30">
+          <CardHeader>
+            <Skeleton className="h-5 w-40" />
+          </CardHeader>
+          <CardContent className="pt-0 pb-6">
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-3/4" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    )
   }
 
   const sermon = sermonQuery.data
@@ -95,7 +137,7 @@ export function SermonDetailView({ id, onEdit, onRefresh }: SermonDetailViewProp
       </div>
 
       {showConfirmDelete && (
-        <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300">
+        <Alert variant="destructive" className="animate-in fade-in slide-in-from-top-2 duration-300" role="alert" aria-live="assertive">
           <Trash2 className="h-4 w-4" />
           <AlertTitle>Are you absolutely sure?</AlertTitle>
           <AlertDescription className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -103,14 +145,25 @@ export function SermonDetailView({ id, onEdit, onRefresh }: SermonDetailViewProp
             <Button
               variant="destructive"
               size="sm"
+              ref={confirmDeleteButtonRef}
               onClick={() => deleteSermon.mutate({ id })}
               disabled={deleteSermon.isPending}
+              aria-label="Confirm sermon deletion"
             >
               {deleteSermon.isPending ? "Deleting..." : "Confirm Delete"}
             </Button>
           </AlertDescription>
         </Alert>
       )}
+
+      {/* Keyboard event handler for delete confirmation */}
+      <div
+        onKeyDown={(e) => {
+          if (showConfirmDelete && e.key === 'Escape') {
+            setShowConfirmDelete(false)
+          }
+        }}
+      />
 
       <div className="grid gap-6">
         {sermon.link && (

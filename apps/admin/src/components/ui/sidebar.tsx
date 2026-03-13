@@ -207,6 +207,7 @@ function Sidebar({
 
   return (
     <div
+      id="sidebar"
       className="group peer text-sidebar-foreground hidden md:block"
       data-state={state}
       data-collapsible={state === "collapsed" ? collapsible : ""}
@@ -258,7 +259,7 @@ function SidebarTrigger({
   onClick,
   ...props
 }: React.ComponentProps<typeof Button>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, open } = useSidebar()
 
   return (
     <Button
@@ -271,6 +272,10 @@ function SidebarTrigger({
         onClick?.(event)
         toggleSidebar()
       }}
+      aria-label="Toggle Sidebar"
+      aria-expanded={open}
+      aria-controls="sidebar"
+      aria-pressed={open}
       {...props}
     >
       <PanelLeftIcon />

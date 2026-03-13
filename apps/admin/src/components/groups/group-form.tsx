@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { useCallback, useMemo } from 'react'
 
 interface GroupFormProps {
   initialValues?: {
@@ -29,24 +30,31 @@ interface GroupFormProps {
 export function GroupForm({ initialValues, onSubmit, isSubmitting, onCancel }: GroupFormProps) {
   const membersQuery = useQuery(trpc.admin.members.list.queryOptions())
 
+  // Memoize filtered members to avoid unnecessary recalculations
+  const membersWithUsers = useMemo(() => {
+    return membersQuery.data?.filter(member => member.userId) || []
+  }, [membersQuery.data])
+
   const form = useForm({
     defaultValues: initialValues || {
       name: '',
       description: '',
       leaderId: null,
     },
-    onSubmit: async ({ value }) => {
+    onSubmit: useCallback(async ({ value }) => {
       await onSubmit(value)
-    },
+    }, [onSubmit]),
   })
+
+  const handleSubmit = useCallback((e: React.FormEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    form.handleSubmit()
+  }, [form])
 
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault()
-        e.stopPropagation()
-        form.handleSubmit()
-      }}
+      onSubmit={handleSubmit}
       className="space-y-4"
     >
       <form.Field
@@ -101,7 +109,7 @@ export function GroupForm({ initialValues, onSubmit, isSubmitting, onCancel }: G
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="__none__">No Leader (You will be assigned)</SelectItem>
-                {membersQuery.data?.filter(member => member.userId).map((member) => (
+                {membersWithUsers.map((member) => (
                   <SelectItem key={member.id} value={member.userId!}>
                     {member.user?.name || member.user?.email || 'Unknown'}
                   </SelectItem>
