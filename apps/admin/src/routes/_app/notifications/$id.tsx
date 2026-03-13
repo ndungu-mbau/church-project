@@ -15,7 +15,7 @@ export const Route = createFileRoute("/_app/notifications/$id")({
 function NotificationDetail() {
   const { id } = Route.useParams();
   const { edit } = useSearch({ from: "/_app/notifications/$id" });
-  const navigate = useNavigate({ from: "/_app/notifications/$id" });
+  const navigate = useNavigate({ from: "/notifications/$id" });
 
   const notificationQuery = useQuery(
     trpc.admin.notifications.get.queryOptions({ id }),
