@@ -1,17 +1,21 @@
 {
-	"expo": {
-		"scheme": "church-project-client",
-		"userInterfaceStyle": "automatic",
-		"orientation": "default",
-		"web": {
-			"bundler": "metro"
-		},
-		"name": "Church Client",
-		"slug": "church-project-client",
-		"plugins": ["expo-font"],
-		"experiments": {
-			"typedRoutes": true,
-			"reactCompiler": true
-		}
-	}
+  "expo": {
+    "scheme": "church-project-client",
+    "userInterfaceStyle": "automatic",
+    "orientation": "default",
+    "web": {
+      "bundler": "metro"
+    },
+    "name": "Church Client",
+    "slug": "church-project-client",
+    "plugins": [
+      "expo-font",
+      "expo-router",
+      "expo-secure-store"
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    }
+  }
 }
