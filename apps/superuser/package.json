@@ -1,5 +1,5 @@
 {
-  "name": "superuser",
+  "name": "@church-project/superuser",
   "private": true,
   "type": "module",
   "scripts": {

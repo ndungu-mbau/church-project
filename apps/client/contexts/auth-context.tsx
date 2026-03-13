@@ -6,6 +6,7 @@ type Session = typeof authClient.$Infer.Session;
 interface AuthContextType {
   signIn: typeof authClient.signIn;
   signOut: typeof authClient.signOut;
+  useSession: typeof authClient.useSession;
   session: Session | null;
   isLoading: boolean;
 }
@@ -40,6 +41,7 @@ export function SessionProvider({ children }: SessionProviderProps) {
       value={{
         signIn: authClient.signIn,
         signOut: authClient.signOut,
+        useSession: authClient.useSession,
         session: session ?? null,
         isLoading: isPending,
       }}

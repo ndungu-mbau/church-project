@@ -9,38 +9,178 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as TodosRouteImport } from './routes/todos'
-import { Route as RegisterRouteImport } from './routes/register'
-import { Route as LoginRouteImport } from './routes/login'
-import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as RegisterIndexRouteImport } from './routes/register.index'
-import { Route as RegisterOnboardingRouteImport } from './routes/register.onboarding'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AppRouteImport } from './routes/_app'
+import { Route as AppIndexRouteImport } from './routes/_app/index'
+import { Route as AuthRegisterChurchRouteImport } from './routes/auth/register-church'
+import { Route as AuthRegisterRouteImport } from './routes/auth/register'
+import { Route as AuthLoginRouteImport } from './routes/auth/login'
+import { Route as AppSermonsRouteImport } from './routes/_app/sermons'
+import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
+import { Route as AppGroupsRouteImport } from './routes/_app/groups'
+import { Route as AppDevotionsRouteImport } from './routes/_app/devotions'
+import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AuthRegisterChurchIndexRouteImport } from './routes/auth/register-church/index'
+import { Route as AppStaffIndexRouteImport } from './routes/_app/staff/index'
+import { Route as AppSermonsIndexRouteImport } from './routes/_app/sermons/index'
+import { Route as AppMembersIndexRouteImport } from './routes/_app/members/index'
+import { Route as AppGroupsIndexRouteImport } from './routes/_app/groups/index'
+import { Route as AppDevotionsIndexRouteImport } from './routes/_app/devotions/index'
+import { Route as AuthRegisterChurchOnboardingRouteImport } from './routes/auth/register-church/onboarding'
+import { Route as AppStaffIdRouteImport } from './routes/_app/staff/$id'
+import { Route as AppSermonsAddRouteImport } from './routes/_app/sermons/add'
+import { Route as AppSermonsIdRouteImport } from './routes/_app/sermons/$id'
+import { Route as AppNotificationsAddRouteImport } from './routes/_app/notifications/add'
+import { Route as AppNotificationsIdRouteImport } from './routes/_app/notifications/$id'
+import { Route as AppMembersIdRouteImport } from './routes/_app/members/$id'
+import { Route as AppGroupsGroupIdRouteImport } from './routes/_app/groups/$groupId'
+import { Route as AppDevotionsAddRouteImport } from './routes/_app/devotions/add'
+import { Route as AppDevotionsIdRouteImport } from './routes/_app/devotions/$id'
 
-const TodosRoute = TodosRouteImport.update({
-  id: '/todos',
-  path: '/todos',
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RegisterRoute = RegisterRouteImport.update({
-  id: '/register',
-  path: '/register',
+const AppRoute = AppRouteImport.update({
+  id: '/_app',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DashboardRoute = DashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
+const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AppRoute,
+} as any)
+const AuthRegisterChurchRoute = AuthRegisterChurchRouteImport.update({
+  id: '/register-church',
+  path: '/register-church',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthRegisterRoute = AuthRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthLoginRoute = AuthLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AppSermonsRoute = AppSermonsRouteImport.update({
+  id: '/sermons',
+  path: '/sermons',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGroupsRoute = AppGroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDevotionsRoute = AppDevotionsRouteImport.update({
+  id: '/devotions',
+  path: '/devotions',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AuthRegisterChurchIndexRoute = AuthRegisterChurchIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthRegisterChurchRoute,
+} as any)
+const AppStaffIndexRoute = AppStaffIndexRouteImport.update({
+  id: '/staff/',
+  path: '/staff/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSermonsIndexRoute = AppSermonsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppSermonsRoute,
+} as any)
+const AppMembersIndexRoute = AppMembersIndexRouteImport.update({
+  id: '/members/',
+  path: '/members/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGroupsIndexRoute = AppGroupsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppGroupsRoute,
+} as any)
+const AppDevotionsIndexRoute = AppDevotionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppDevotionsRoute,
+} as any)
+const AuthRegisterChurchOnboardingRoute =
+  AuthRegisterChurchOnboardingRouteImport.update({
+    id: '/onboarding',
+    path: '/onboarding',
+    getParentRoute: () => AuthRegisterChurchRoute,
+  } as any)
+const AppStaffIdRoute = AppStaffIdRouteImport.update({
+  id: '/staff/$id',
+  path: '/staff/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSermonsAddRoute = AppSermonsAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AppSermonsRoute,
+} as any)
+const AppSermonsIdRoute = AppSermonsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppSermonsRoute,
+} as any)
+const AppNotificationsAddRoute = AppNotificationsAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AppNotificationsRoute,
+} as any)
+const AppNotificationsIdRoute = AppNotificationsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppNotificationsRoute,
+} as any)
+const AppMembersIdRoute = AppMembersIdRouteImport.update({
+  id: '/members/$id',
+  path: '/members/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGroupsGroupIdRoute = AppGroupsGroupIdRouteImport.update({
+  id: '/$groupId',
+  path: '/$groupId',
+  getParentRoute: () => AppGroupsRoute,
+} as any)
+const AppDevotionsAddRoute = AppDevotionsAddRouteImport.update({
+  id: '/add',
+  path: '/add',
+  getParentRoute: () => AppDevotionsRoute,
+} as any)
+const AppDevotionsIdRoute = AppDevotionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AppDevotionsRoute,
+} as any)
+const RegisterIndexRoute = RegisterIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RegisterRoute,
+} as any)
+const RegisterOnboardingRoute = RegisterOnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => RegisterRoute,
 } as any)
 const RegisterIndexRoute = RegisterIndexRouteImport.update({
   id: '/',
@@ -54,105 +194,380 @@ const RegisterOnboardingRoute = RegisterOnboardingRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRouteWithChildren
-  '/todos': typeof TodosRoute
-  '/register/onboarding': typeof RegisterOnboardingRoute
-  '/register/': typeof RegisterIndexRoute
+  '/': typeof AppIndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/devotions': typeof AppDevotionsRouteWithChildren
+  '/groups': typeof AppGroupsRouteWithChildren
+  '/notifications': typeof AppNotificationsRouteWithChildren
+  '/sermons': typeof AppSermonsRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/register-church': typeof AuthRegisterChurchRouteWithChildren
+  '/devotions/$id': typeof AppDevotionsIdRoute
+  '/devotions/add': typeof AppDevotionsAddRoute
+  '/groups/$groupId': typeof AppGroupsGroupIdRoute
+  '/members/$id': typeof AppMembersIdRoute
+  '/notifications/$id': typeof AppNotificationsIdRoute
+  '/notifications/add': typeof AppNotificationsAddRoute
+  '/sermons/$id': typeof AppSermonsIdRoute
+  '/sermons/add': typeof AppSermonsAddRoute
+  '/staff/$id': typeof AppStaffIdRoute
+  '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
+  '/devotions/': typeof AppDevotionsIndexRoute
+  '/groups/': typeof AppGroupsIndexRoute
+  '/members/': typeof AppMembersIndexRoute
+  '/sermons/': typeof AppSermonsIndexRoute
+  '/staff/': typeof AppStaffIndexRoute
+  '/auth/register-church/': typeof AuthRegisterChurchIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/todos': typeof TodosRoute
-  '/register/onboarding': typeof RegisterOnboardingRoute
-  '/register': typeof RegisterIndexRoute
+  '/auth': typeof AuthRouteWithChildren
+  '/dashboard': typeof AppDashboardRoute
+  '/notifications': typeof AppNotificationsRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/': typeof AppIndexRoute
+  '/devotions/$id': typeof AppDevotionsIdRoute
+  '/devotions/add': typeof AppDevotionsAddRoute
+  '/groups/$groupId': typeof AppGroupsGroupIdRoute
+  '/members/$id': typeof AppMembersIdRoute
+  '/notifications/$id': typeof AppNotificationsIdRoute
+  '/notifications/add': typeof AppNotificationsAddRoute
+  '/sermons/$id': typeof AppSermonsIdRoute
+  '/sermons/add': typeof AppSermonsAddRoute
+  '/staff/$id': typeof AppStaffIdRoute
+  '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
+  '/devotions': typeof AppDevotionsIndexRoute
+  '/groups': typeof AppGroupsIndexRoute
+  '/members': typeof AppMembersIndexRoute
+  '/sermons': typeof AppSermonsIndexRoute
+  '/staff': typeof AppStaffIndexRoute
+  '/auth/register-church': typeof AuthRegisterChurchIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
-  '/login': typeof LoginRoute
-  '/register': typeof RegisterRouteWithChildren
-  '/todos': typeof TodosRoute
-  '/register/onboarding': typeof RegisterOnboardingRoute
-  '/register/': typeof RegisterIndexRoute
+  '/_app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRouteWithChildren
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/devotions': typeof AppDevotionsRouteWithChildren
+  '/_app/groups': typeof AppGroupsRouteWithChildren
+  '/_app/notifications': typeof AppNotificationsRouteWithChildren
+  '/_app/sermons': typeof AppSermonsRouteWithChildren
+  '/auth/login': typeof AuthLoginRoute
+  '/auth/register': typeof AuthRegisterRoute
+  '/auth/register-church': typeof AuthRegisterChurchRouteWithChildren
+  '/_app/': typeof AppIndexRoute
+  '/_app/devotions/$id': typeof AppDevotionsIdRoute
+  '/_app/devotions/add': typeof AppDevotionsAddRoute
+  '/_app/groups/$groupId': typeof AppGroupsGroupIdRoute
+  '/_app/members/$id': typeof AppMembersIdRoute
+  '/_app/notifications/$id': typeof AppNotificationsIdRoute
+  '/_app/notifications/add': typeof AppNotificationsAddRoute
+  '/_app/sermons/$id': typeof AppSermonsIdRoute
+  '/_app/sermons/add': typeof AppSermonsAddRoute
+  '/_app/staff/$id': typeof AppStaffIdRoute
+  '/auth/register-church/onboarding': typeof AuthRegisterChurchOnboardingRoute
+  '/_app/devotions/': typeof AppDevotionsIndexRoute
+  '/_app/groups/': typeof AppGroupsIndexRoute
+  '/_app/members/': typeof AppMembersIndexRoute
+  '/_app/sermons/': typeof AppSermonsIndexRoute
+  '/_app/staff/': typeof AppStaffIndexRoute
+  '/auth/register-church/': typeof AuthRegisterChurchIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/dashboard'
-    | '/login'
-    | '/register'
-    | '/todos'
-    | '/register/onboarding'
-    | '/register/'
+    | '/devotions'
+    | '/groups'
+    | '/notifications'
+    | '/sermons'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/register-church'
+    | '/devotions/$id'
+    | '/devotions/add'
+    | '/groups/$groupId'
+    | '/members/$id'
+    | '/notifications/$id'
+    | '/notifications/add'
+    | '/sermons/$id'
+    | '/sermons/add'
+    | '/staff/$id'
+    | '/auth/register-church/onboarding'
+    | '/devotions/'
+    | '/groups/'
+    | '/members/'
+    | '/sermons/'
+    | '/staff/'
+    | '/auth/register-church/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
+    | '/auth'
     | '/dashboard'
-    | '/login'
-    | '/todos'
-    | '/register/onboarding'
-    | '/register'
+    | '/notifications'
+    | '/auth/login'
+    | '/auth/register'
+    | '/'
+    | '/devotions/$id'
+    | '/devotions/add'
+    | '/groups/$groupId'
+    | '/members/$id'
+    | '/notifications/$id'
+    | '/notifications/add'
+    | '/sermons/$id'
+    | '/sermons/add'
+    | '/staff/$id'
+    | '/auth/register-church/onboarding'
+    | '/devotions'
+    | '/groups'
+    | '/members'
+    | '/sermons'
+    | '/staff'
+    | '/auth/register-church'
   id:
     | '__root__'
-    | '/'
-    | '/dashboard'
-    | '/login'
-    | '/register'
-    | '/todos'
-    | '/register/onboarding'
-    | '/register/'
+    | '/_app'
+    | '/auth'
+    | '/_app/dashboard'
+    | '/_app/devotions'
+    | '/_app/groups'
+    | '/_app/notifications'
+    | '/_app/sermons'
+    | '/auth/login'
+    | '/auth/register'
+    | '/auth/register-church'
+    | '/_app/'
+    | '/_app/devotions/$id'
+    | '/_app/devotions/add'
+    | '/_app/groups/$groupId'
+    | '/_app/members/$id'
+    | '/_app/notifications/$id'
+    | '/_app/notifications/add'
+    | '/_app/sermons/$id'
+    | '/_app/sermons/add'
+    | '/_app/staff/$id'
+    | '/auth/register-church/onboarding'
+    | '/_app/devotions/'
+    | '/_app/groups/'
+    | '/_app/members/'
+    | '/_app/sermons/'
+    | '/_app/staff/'
+    | '/auth/register-church/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
-  LoginRoute: typeof LoginRoute
-  RegisterRoute: typeof RegisterRouteWithChildren
-  TodosRoute: typeof TodosRoute
+  AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/todos': {
-      id: '/todos'
-      path: '/todos'
-      fullPath: '/todos'
-      preLoaderRoute: typeof TodosRouteImport
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/register': {
-      id: '/register'
-      path: '/register'
-      fullPath: '/register'
-      preLoaderRoute: typeof RegisterRouteImport
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/dashboard': {
-      id: '/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof DashboardRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/auth/register-church': {
+      id: '/auth/register-church'
+      path: '/register-church'
+      fullPath: '/auth/register-church'
+      preLoaderRoute: typeof AuthRegisterChurchRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/register': {
+      id: '/auth/register'
+      path: '/register'
+      fullPath: '/auth/register'
+      preLoaderRoute: typeof AuthRegisterRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/auth/login': {
+      id: '/auth/login'
+      path: '/login'
+      fullPath: '/auth/login'
+      preLoaderRoute: typeof AuthLoginRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_app/sermons': {
+      id: '/_app/sermons'
+      path: '/sermons'
+      fullPath: '/sermons'
+      preLoaderRoute: typeof AppSermonsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/groups': {
+      id: '/_app/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof AppGroupsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/devotions': {
+      id: '/_app/devotions'
+      path: '/devotions'
+      fullPath: '/devotions'
+      preLoaderRoute: typeof AppDevotionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/auth/register-church/': {
+      id: '/auth/register-church/'
+      path: '/'
+      fullPath: '/auth/register-church/'
+      preLoaderRoute: typeof AuthRegisterChurchIndexRouteImport
+      parentRoute: typeof AuthRegisterChurchRoute
+    }
+    '/_app/staff/': {
+      id: '/_app/staff/'
+      path: '/staff'
+      fullPath: '/staff/'
+      preLoaderRoute: typeof AppStaffIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sermons/': {
+      id: '/_app/sermons/'
+      path: '/'
+      fullPath: '/sermons/'
+      preLoaderRoute: typeof AppSermonsIndexRouteImport
+      parentRoute: typeof AppSermonsRoute
+    }
+    '/_app/members/': {
+      id: '/_app/members/'
+      path: '/members'
+      fullPath: '/members/'
+      preLoaderRoute: typeof AppMembersIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/groups/': {
+      id: '/_app/groups/'
+      path: '/'
+      fullPath: '/groups/'
+      preLoaderRoute: typeof AppGroupsIndexRouteImport
+      parentRoute: typeof AppGroupsRoute
+    }
+    '/_app/devotions/': {
+      id: '/_app/devotions/'
+      path: '/'
+      fullPath: '/devotions/'
+      preLoaderRoute: typeof AppDevotionsIndexRouteImport
+      parentRoute: typeof AppDevotionsRoute
+    }
+    '/auth/register-church/onboarding': {
+      id: '/auth/register-church/onboarding'
+      path: '/onboarding'
+      fullPath: '/auth/register-church/onboarding'
+      preLoaderRoute: typeof AuthRegisterChurchOnboardingRouteImport
+      parentRoute: typeof AuthRegisterChurchRoute
+    }
+    '/_app/staff/$id': {
+      id: '/_app/staff/$id'
+      path: '/staff/$id'
+      fullPath: '/staff/$id'
+      preLoaderRoute: typeof AppStaffIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sermons/add': {
+      id: '/_app/sermons/add'
+      path: '/add'
+      fullPath: '/sermons/add'
+      preLoaderRoute: typeof AppSermonsAddRouteImport
+      parentRoute: typeof AppSermonsRoute
+    }
+    '/_app/sermons/$id': {
+      id: '/_app/sermons/$id'
+      path: '/$id'
+      fullPath: '/sermons/$id'
+      preLoaderRoute: typeof AppSermonsIdRouteImport
+      parentRoute: typeof AppSermonsRoute
+    }
+    '/_app/notifications/add': {
+      id: '/_app/notifications/add'
+      path: '/add'
+      fullPath: '/notifications/add'
+      preLoaderRoute: typeof AppNotificationsAddRouteImport
+      parentRoute: typeof AppNotificationsRoute
+    }
+    '/_app/notifications/$id': {
+      id: '/_app/notifications/$id'
+      path: '/$id'
+      fullPath: '/notifications/$id'
+      preLoaderRoute: typeof AppNotificationsIdRouteImport
+      parentRoute: typeof AppNotificationsRoute
+    }
+    '/_app/members/$id': {
+      id: '/_app/members/$id'
+      path: '/members/$id'
+      fullPath: '/members/$id'
+      preLoaderRoute: typeof AppMembersIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/groups/$groupId': {
+      id: '/_app/groups/$groupId'
+      path: '/$groupId'
+      fullPath: '/groups/$groupId'
+      preLoaderRoute: typeof AppGroupsGroupIdRouteImport
+      parentRoute: typeof AppGroupsRoute
+    }
+    '/_app/devotions/add': {
+      id: '/_app/devotions/add'
+      path: '/add'
+      fullPath: '/devotions/add'
+      preLoaderRoute: typeof AppDevotionsAddRouteImport
+      parentRoute: typeof AppDevotionsRoute
+    }
+    '/_app/devotions/$id': {
+      id: '/_app/devotions/$id'
+      path: '/$id'
+      fullPath: '/devotions/$id'
+      preLoaderRoute: typeof AppDevotionsIdRouteImport
+      parentRoute: typeof AppDevotionsRoute
+    }
+    '/register/': {
+      id: '/register/'
+      path: '/'
+      fullPath: '/register/'
+      preLoaderRoute: typeof RegisterIndexRouteImport
+      parentRoute: typeof RegisterRoute
+    }
+    '/register/onboarding': {
+      id: '/register/onboarding'
+      path: '/onboarding'
+      fullPath: '/register/onboarding'
+      preLoaderRoute: typeof RegisterOnboardingRouteImport
+      parentRoute: typeof RegisterRoute
     }
     '/register/': {
       id: '/register/'
@@ -171,26 +586,123 @@ declare module '@tanstack/react-router' {
   }
 }
 
-interface RegisterRouteChildren {
-  RegisterOnboardingRoute: typeof RegisterOnboardingRoute
-  RegisterIndexRoute: typeof RegisterIndexRoute
+interface AppDevotionsRouteChildren {
+  AppDevotionsIdRoute: typeof AppDevotionsIdRoute
+  AppDevotionsAddRoute: typeof AppDevotionsAddRoute
+  AppDevotionsIndexRoute: typeof AppDevotionsIndexRoute
 }
 
-const RegisterRouteChildren: RegisterRouteChildren = {
-  RegisterOnboardingRoute: RegisterOnboardingRoute,
-  RegisterIndexRoute: RegisterIndexRoute,
+const AppDevotionsRouteChildren: AppDevotionsRouteChildren = {
+  AppDevotionsIdRoute: AppDevotionsIdRoute,
+  AppDevotionsAddRoute: AppDevotionsAddRoute,
+  AppDevotionsIndexRoute: AppDevotionsIndexRoute,
 }
 
-const RegisterRouteWithChildren = RegisterRoute._addFileChildren(
-  RegisterRouteChildren,
+const AppDevotionsRouteWithChildren = AppDevotionsRoute._addFileChildren(
+  AppDevotionsRouteChildren,
 )
 
+interface AppGroupsRouteChildren {
+  AppGroupsGroupIdRoute: typeof AppGroupsGroupIdRoute
+  AppGroupsIndexRoute: typeof AppGroupsIndexRoute
+}
+
+const AppGroupsRouteChildren: AppGroupsRouteChildren = {
+  AppGroupsGroupIdRoute: AppGroupsGroupIdRoute,
+  AppGroupsIndexRoute: AppGroupsIndexRoute,
+}
+
+const AppGroupsRouteWithChildren = AppGroupsRoute._addFileChildren(
+  AppGroupsRouteChildren,
+)
+
+interface AppNotificationsRouteChildren {
+  AppNotificationsIdRoute: typeof AppNotificationsIdRoute
+  AppNotificationsAddRoute: typeof AppNotificationsAddRoute
+}
+
+const AppNotificationsRouteChildren: AppNotificationsRouteChildren = {
+  AppNotificationsIdRoute: AppNotificationsIdRoute,
+  AppNotificationsAddRoute: AppNotificationsAddRoute,
+}
+
+const AppNotificationsRouteWithChildren =
+  AppNotificationsRoute._addFileChildren(AppNotificationsRouteChildren)
+
+interface AppSermonsRouteChildren {
+  AppSermonsIdRoute: typeof AppSermonsIdRoute
+  AppSermonsAddRoute: typeof AppSermonsAddRoute
+  AppSermonsIndexRoute: typeof AppSermonsIndexRoute
+}
+
+const AppSermonsRouteChildren: AppSermonsRouteChildren = {
+  AppSermonsIdRoute: AppSermonsIdRoute,
+  AppSermonsAddRoute: AppSermonsAddRoute,
+  AppSermonsIndexRoute: AppSermonsIndexRoute,
+}
+
+const AppSermonsRouteWithChildren = AppSermonsRoute._addFileChildren(
+  AppSermonsRouteChildren,
+)
+
+interface AppRouteChildren {
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppDevotionsRoute: typeof AppDevotionsRouteWithChildren
+  AppGroupsRoute: typeof AppGroupsRouteWithChildren
+  AppNotificationsRoute: typeof AppNotificationsRouteWithChildren
+  AppSermonsRoute: typeof AppSermonsRouteWithChildren
+  AppIndexRoute: typeof AppIndexRoute
+  AppMembersIdRoute: typeof AppMembersIdRoute
+  AppStaffIdRoute: typeof AppStaffIdRoute
+  AppMembersIndexRoute: typeof AppMembersIndexRoute
+  AppStaffIndexRoute: typeof AppStaffIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppDashboardRoute: AppDashboardRoute,
+  AppDevotionsRoute: AppDevotionsRouteWithChildren,
+  AppGroupsRoute: AppGroupsRouteWithChildren,
+  AppNotificationsRoute: AppNotificationsRouteWithChildren,
+  AppSermonsRoute: AppSermonsRouteWithChildren,
+  AppIndexRoute: AppIndexRoute,
+  AppMembersIdRoute: AppMembersIdRoute,
+  AppStaffIdRoute: AppStaffIdRoute,
+  AppMembersIndexRoute: AppMembersIndexRoute,
+  AppStaffIndexRoute: AppStaffIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
+interface AuthRegisterChurchRouteChildren {
+  AuthRegisterChurchOnboardingRoute: typeof AuthRegisterChurchOnboardingRoute
+  AuthRegisterChurchIndexRoute: typeof AuthRegisterChurchIndexRoute
+}
+
+const AuthRegisterChurchRouteChildren: AuthRegisterChurchRouteChildren = {
+  AuthRegisterChurchOnboardingRoute: AuthRegisterChurchOnboardingRoute,
+  AuthRegisterChurchIndexRoute: AuthRegisterChurchIndexRoute,
+}
+
+const AuthRegisterChurchRouteWithChildren =
+  AuthRegisterChurchRoute._addFileChildren(AuthRegisterChurchRouteChildren)
+
+interface AuthRouteChildren {
+  AuthLoginRoute: typeof AuthLoginRoute
+  AuthRegisterRoute: typeof AuthRegisterRoute
+  AuthRegisterChurchRoute: typeof AuthRegisterChurchRouteWithChildren
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+  AuthLoginRoute: AuthLoginRoute,
+  AuthRegisterRoute: AuthRegisterRoute,
+  AuthRegisterChurchRoute: AuthRegisterChurchRouteWithChildren,
+}
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
-  LoginRoute: LoginRoute,
-  RegisterRoute: RegisterRouteWithChildren,
-  TodosRoute: TodosRoute,
+  AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

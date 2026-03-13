@@ -10,18 +10,24 @@ import { PortalHost } from "@rn-primitives/portal";
 
 import { queryClient } from "@/utils/trpc";
 import { Toaster } from "@/components/ui/toaster";
-import { SessionProvider } from "@/contexts/auth-context";
+import { SessionProvider, useSession } from "@/contexts/auth-context";
 
 function StackLayout() {
+	const { session, isLoading } = useSession();
+
+	if (isLoading) {
+		return null;
+	}
+
 	return (
 		<Stack screenOptions={{
 		}}>
-			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-			<Stack.Screen name="(auth)" options={{ headerShown: false }} />
-			<Stack.Screen
-				name="modal"
-				options={{ title: "Modal", presentation: "modal" }}
-			/>
+			<Stack.Protected guard={!!session}>
+				<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+			</Stack.Protected>
+			<Stack.Protected guard={!session}>
+				<Stack.Screen name="(auth)" options={{ headerShown: false }} />
+			</Stack.Protected>
 		</Stack>
 	);
 }

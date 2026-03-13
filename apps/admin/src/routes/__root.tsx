@@ -10,6 +10,8 @@ import {
 	createRootRouteWithContext,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+
+import { authClient } from "@/lib/auth-client";
 import "../index.css";
 
 export interface RouterAppContext {
@@ -22,11 +24,11 @@ export const Route = createRootRouteWithContext<RouterAppContext>()({
 	head: () => ({
 		meta: [
 			{
-				title: "church-project",
+				title: "Imani Manager",
 			},
 			{
 				name: "description",
-				content: "church-project is a web application",
+				content: "Imani Manager: Church Management System for the New Age",
 			},
 		],
 		links: [
@@ -49,7 +51,6 @@ function RootComponent() {
 				storageKey="vite-ui-theme"
 			>
 				<div className="grid grid-rows-[auto_1fr] h-svh">
-					<Header />
 					<Outlet />
 				</div>
 				<Toaster richColors />
